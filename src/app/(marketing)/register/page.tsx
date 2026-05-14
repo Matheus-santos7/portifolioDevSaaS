@@ -10,7 +10,7 @@ import {
   authPrimaryButtonClass,
   authTitleClass,
 } from "@/features/marketing/components/auth-marketing-classes";
-import MarketingShell from "@/features/marketing/components/MarketingShell";
+import HeaderMarketing from "@/features/marketing/components/HeaderMarketing";
 import { REGISTER_ERROR_MESSAGES } from "@/lib/auth/error-messages";
 import { MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
 
@@ -23,7 +23,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
   const registerErrorMessage = params.err ? REGISTER_ERROR_MESSAGES[params.err] : undefined;
 
   return (
-    <MarketingShell navActive="register">
+    <HeaderMarketing navActive="register">
       <main className="flex min-h-[calc(100vh-1px)] flex-col px-4 pb-24 pt-24 sm:px-6 sm:pt-28">
         <div className="flex flex-1 flex-col items-center justify-center">
           <section className={authCardClass}>
@@ -72,6 +72,6 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
           </section>
         </div>
       </main>
-    </MarketingShell>
+    </HeaderMarketing>
   );
 }

@@ -5,7 +5,7 @@ import { marketingSurfaceStyle } from "@/features/marketing/components/marketing
 
 export type MarketingNavActive = "home" | "login" | "register" | "none";
 
-type MarketingShellProps = {
+type HeaderMarketingProps = {
   children: React.ReactNode;
   navActive: MarketingNavActive;
   /** Se definido, substitui os links «Entrar» / «Criar conta». */
@@ -19,12 +19,12 @@ const navInactive =
 const navLoginHighlighted =
   "rounded-lg bg-white/10 px-3 py-2 font-medium text-white";
 
-export default function MarketingShell({
+export default function HeaderMarketing({
   children,
   navActive,
   headerRight,
   showFooterAuthLinks = true,
-}: MarketingShellProps) {
+}: HeaderMarketingProps) {
   const loginNavClass = navActive === "login" ? navLoginHighlighted : navInactive;
   const registerExtra =
     navActive === "register"
@@ -40,7 +40,7 @@ export default function MarketingShell({
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight text-white">
             <Layout className="h-8 w-8 text-violet-400" aria-hidden />
-            <span>PageDEV SaaS</span>
+            <span>Portifolio DEV SaaS</span>
           </Link>
           <nav className="flex items-center gap-3 text-sm">
             {headerRight ?? (
@@ -63,7 +63,7 @@ export default function MarketingShell({
       {children}
 
       <footer className="border-t border-white/10 px-4 py-10 text-center text-sm text-gray-500 sm:px-6">
-        <p>PageDEV SaaS — feito para devs mostrarem o que constroem.</p>
+        <p>Portifolio DEV SaaS — feito para devs mostrarem o que constroem.</p>
         {showFooterAuthLinks ? (
           <p className="mt-2">
             <Link href="/login" className="text-violet-400 hover:text-violet-300 hover:underline">

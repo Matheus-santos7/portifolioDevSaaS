@@ -7,11 +7,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import MarketingShell from "@/features/marketing/components/MarketingShell";
+import HeaderMarketing from "@/features/marketing/components/HeaderMarketing";
 
 export default function LandingPage() {
   return (
-    <MarketingShell navActive="home">
+    <HeaderMarketing navActive="home">
       <main>
         <section className="relative overflow-hidden px-4 pb-20 pt-28 sm:px-6 sm:pt-32 lg:pb-28">
           <div
@@ -28,7 +28,7 @@ export default function LandingPage() {
               <Sparkles className="h-3.5 w-3.5" aria-hidden />
               100% gratuito para desenvolvedores
             </p>
-            <h1 className="text-balance bg-gradient-to-br from-white via-gray-100 to-gray-400 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl lg:text-6xl">
+            <h1 className="text-balance bg-gradient-to-br from-white via-gray-100 to-gray-400 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-7xl lg:text-7xl">
               Seu portfólio público em um link. Pronto para LinkedIn e currículo.
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-gray-400 sm:text-xl">
@@ -134,6 +134,6 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
-    </MarketingShell>
+    </HeaderMarketing>
   );
 }

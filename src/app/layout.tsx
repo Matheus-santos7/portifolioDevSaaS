@@ -17,20 +17,20 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: getCanonicalSiteUrlObject(),
-  applicationName: "PageDEV SaaS",
+  applicationName: "Portifolio DEV SaaS",
   title: {
-    default: "PageDEV SaaS",
-    template: "%s · PageDEV SaaS",
+    default: "Portifolio DEV SaaS",
+    template: "%s · Portifolio DEV SaaS",
   },
   description:
-    "PageDEV SaaS e a plataforma para criar, editar e publicar portfolios de desenvolvedores em um link publico com dashboard proprio.",
+    "Portifolio DEV SaaS e a plataforma para criar, editar e publicar portfolios de desenvolvedores em um link publico com dashboard proprio.",
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    title: "PageDEV SaaS",
+    title: "Portifolio DEV SaaS",
     description:
       "Crie e publique seu portfolio de desenvolvedor com projetos, habilidades, certificados e dashboard proprio.",
-    siteName: "PageDEV SaaS",
+    siteName: "Portifolio DEV SaaS",
   },
   twitter: {
     card: "summary_large_image",

@@ -12,7 +12,7 @@ import {
   authPrimaryButtonClass,
   authTitleClass,
 } from "@/features/marketing/components/auth-marketing-classes";
-import MarketingShell from "@/features/marketing/components/MarketingShell";
+import HeaderMarketing from "@/features/marketing/components/HeaderMarketing";
 import { LOGIN_ERROR_MESSAGES } from "@/lib/auth/error-messages";
 
 type LoginPageProps = {
@@ -31,7 +31,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const loginErrorMessage = params.err ? LOGIN_ERROR_MESSAGES[params.err] : undefined;
 
   return (
-    <MarketingShell navActive="login">
+    <HeaderMarketing navActive="login">
       <main className="flex min-h-[calc(100vh-1px)] flex-col px-4 pb-24 pt-24 sm:px-6 sm:pt-28">
         <div className="flex flex-1 flex-col items-center justify-center">
           <section className={authCardClass}>
@@ -91,6 +91,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </section>
         </div>
       </main>
-    </MarketingShell>
+    </HeaderMarketing>
   );
 }
