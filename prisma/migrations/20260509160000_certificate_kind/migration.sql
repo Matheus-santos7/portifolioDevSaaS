@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "CertificateKind" AS ENUM ('GRADUATION', 'POST_GRADUATION', 'EXTENSION', 'COURSE', 'CERTIFICATION', 'WORKSHOP', 'OTHER');
+
+-- AlterTable
+ALTER TABLE "Certificate" ADD COLUMN "kind" "CertificateKind" NOT NULL DEFAULT 'CERTIFICATION';

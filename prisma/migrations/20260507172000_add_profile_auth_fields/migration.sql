@@ -1,0 +1,3 @@
+ALTER TABLE "Profile"
+ADD COLUMN "passwordHash" TEXT,
+ADD COLUMN "isPublic" BOOLEAN NOT NULL DEFAULT true;

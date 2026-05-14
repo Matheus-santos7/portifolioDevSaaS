@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DegreeKind {
+  GRADUATION
+  POST_GRADUATION
+}
+
+model Profile {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  name          String
+  bio           String
+  perfil        String
+  degreeKind      DegreeKind  @default(POST_GRADUATION)
+  /** Texto exibido após «Graduação» ou «Pós-graduado» (ex.: nome do curso). */
+  degreeHighlight String      @default("")
+  avatarUrl     String?
+  avatarImage   Bytes?
+  avatarMime    String?
+  /** true quando há imagem guardada na BD (evita ler BYTEA só para saber). */
+  hasStoredAvatar Boolean @default(false)
+  email         String?
+  phone         String?
+  linkedin      String?
+  instagram     String?
+  notion        String?
+  github        String?
+  /** URL externa alternativa ao PDF armazenado (ex.: Google Drive). */
+  curriculum         String?
+  curriculumPdf      Bytes?
+  curriculumMime     String?
+  hasStoredCurriculum Boolean @default(false)
+  objectives    String
+  currentSector String
+  targetSector  String
+  isPublic      Boolean       @default(true)
+  slugOnboardingDone Boolean  @default(true)
+  userId        String        @unique
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  user          User          @relation(fields: [userId], references: [id])
+  certificates  Certificate[]
+  education     Education[]
+  experience    Experience[]
+  projects      Project[]
+  skills        Skill[]
+}
+
+/** Catálogo global de tecnologias — qualquer utilizador pode acrescentar; todos veem a mesma lista. */
+model Technology {
+  id        String   @id @default(cuid())
+  name      String
+  /** Nome normalizado (minúsculas, trim) para unicidade. */
+  nameKey   String   @unique
+  /** Ícone SVG (ex.: CDN Devicon, ver https://techicons.dev/). */
+  svgUrl    String?
+  createdAt DateTime @default(now())
+  skills    Skill[]
+}
+
+model User {
+  id                      String               @id @default(cuid())
+  name                    String
+  email                   String               @unique
+  passwordHash            String?
+  lastPasswordResetSentAt DateTime?
+  createdAt               DateTime             @default(now())
+  updatedAt               DateTime             @updatedAt
+  profile                 Profile?
+  passwordResetTokens     PasswordResetToken[]
+}
+
+model PasswordResetToken {
+  id         String    @id @default(cuid())
+  tokenHash  String    @unique
+  userId     String
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Education {
+  id          String   @id @default(cuid())
+  institution String
+  course      String
+  status      String
+  startDate   DateTime
+  endDate     DateTime
+  profileId   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  profile     Profile? @relation(fields: [profileId], references: [id])
+}
+
+model Experience {
+  id          String   @id @default(cuid())
+  title       String
+  company     String
+  position    String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  location    String
+  profileId   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  profile     Profile? @relation(fields: [profileId], references: [id])
+}
+
+model Project {
+  id              String   @id @default(cuid())
+  name            String
+  description     String
+  backgroundCover String
+  /// Imagem da capa armazenada na BD (alternativa a URL em `backgroundCover`).
+  coverImage      Bytes?
+  coverMime       String?
+  hasStoredCover  Boolean  @default(false)
+  repositorio     String
+  linkView        String
+  profileId       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  profile         Profile? @relation(fields: [profileId], references: [id])
+}
+
+model Certificate {
+  id        String   @id @default(cuid())
+  name      String
+  /** Opcional enquanto o estado for «em andamento». */
+  endDate   DateTime?
+  emitter   String
+  status    Status
+  /** Graduação, curso, extensão, etc. — exibido como tag no cartão. */
+  kind      CertificateKind @default(CERTIFICATION)
+  link      String
+  profileId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile   Profile? @relation(fields: [profileId], references: [id])
+}
+
+model Skill {
+  id             String     @id @default(cuid())
+  profileId      String
+  technologyId   String
+  level          Level      @default(INTERMEDIATE)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  profile        Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  technology     Technology @relation(fields: [technologyId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, technologyId])
+  @@index([profileId])
+  @@index([technologyId])
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum Status {
+  IN_PROGRESS
+  COMPLETED
+  PENDING
+}
+
+/** Tipo de formação / documento (etiqueta no cartão). */
+enum CertificateKind {
+  GRADUATION
+  POST_GRADUATION
+  EXTENSION
+  COURSE
+  CERTIFICATION
+  WORKSHOP
+  OTHER
+}

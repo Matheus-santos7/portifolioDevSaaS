@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PageDEV SaaS">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#7c3aed" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg)" />
+  <path
+    d="M22 18h11.5c7.5 0 12.5 4.8 12.5 12s-5 12-12.5 12H30v10h-8V18zm8 7v10h3.1c3.2 0 5-1.8 5-5s-1.8-5-5-5H30z"
+    fill="#fff"
+  />
+  <path
+    d="M18 47.5 11 41l7-6.5"
+    fill="none"
+    stroke="#c4b5fd"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="3"
+  />
+  <path
+    d="M46 47.5 53 41l-7-6.5"
+    fill="none"
+    stroke="#c4b5fd"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="3"
+  />
+</svg>
