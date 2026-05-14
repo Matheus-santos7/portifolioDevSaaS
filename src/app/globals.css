@@ -70,3 +70,16 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/** Fundo escuro com grade de pontos em violeta (landing + auth). */
+@layer components {
+  .marketing-surface {
+    background-image:
+      radial-gradient(rgb(139 92 246 / 0.14) 2px, transparent 2px),
+      radial-gradient(rgb(124 58 237 / 0.1) 2px, transparent 2px);
+    background-size: 100px 100px;
+    background-position:
+      0 0,
+      50px 50px;
+  }
+}

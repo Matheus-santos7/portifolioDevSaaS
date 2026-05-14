@@ -1,9 +1,5 @@
 "use client";
 
-import {
-  authInputClass,
-  authPrimaryButtonClass,
-} from "@/features/marketing/components/auth-marketing-classes";
 import { savePortfolioSlugAction } from "@/features/profile/slug-actions";
 
 export function SetupSlugForm() {
@@ -22,14 +18,17 @@ export function SetupSlugForm() {
             required
             autoComplete="off"
             placeholder="ex.: joao-silva"
-            className={`min-w-[200px] flex-1 ${authInputClass}`}
+            className="min-w-[200px] flex-1 rounded-lg border border-white/15 bg-gray-900/70 px-3 py-2.5 text-sm text-white placeholder:text-gray-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
           />
         </div>
         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
           Apenas letras minúsculas, números e hífens. Mínimo 3 caracteres.
         </p>
       </div>
-      <button type="submit" className={authPrimaryButtonClass}>
+      <button
+        type="submit"
+        className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-700 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-950/40 transition hover:from-violet-500 hover:to-purple-600 disabled:cursor-not-allowed disabled:opacity-60"
+      >
         Continuar para meu portfólio
       </button>
     </form>

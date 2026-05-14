@@ -1,8 +1,6 @@
 import { Layout } from "lucide-react";
 import Link from "next/link";
 
-import { marketingSurfaceStyle } from "@/features/marketing/components/marketing-surface";
-
 export type MarketingNavActive = "home" | "login" | "register" | "none";
 
 type HeaderMarketingProps = {
@@ -32,10 +30,7 @@ export default function HeaderMarketing({
       : "";
 
   return (
-    <div
-      className="min-h-screen bg-gray-950 text-gray-100 [color-scheme:dark]"
-      style={marketingSurfaceStyle}
-    >
+    <div className="marketing-surface min-h-screen bg-gray-950 text-gray-100 [color-scheme:dark]">
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-gray-950/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight text-white">
