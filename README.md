@@ -189,14 +189,16 @@ Comportamento importante:
 
 ### P3009 — migração `20260509203000_technology_catalog_skill_fk` falhada
 
-Se o deploy falhar com **P3009** e o log da base mencionar **`Technology` already exists**, a migração no repo é **idempotente** (reaplicável). Na Neon/produção corre **uma vez**, com `DATABASE_URL` de produção:
+Em **Vercel / CI**, o script `scripts/run-build-migrations.mjs` tenta **recuperar automaticamente**: se `migrate deploy` falhar com **P3009** só nesta migração, corre `migrate resolve --rolled-back` e volta a executar `migrate deploy` **uma vez**. Isso funciona em conjunto com o SQL **idempotente** dessa migração no repositório.
+
+Se precisares de corrigir manualmente na Neon (ou se for **outra** migração falhada), com `DATABASE_URL` de produção:
 
 ```bash
 pnpm prisma migrate resolve --rolled-back 20260509203000_technology_catalog_skill_fk
 pnpm prisma migrate deploy
 ```
 
-Depois volta a fazer deploy na Vercel. Se o schema já estiver 100% aplicado e só o histórico Prisma estiver errado, usa `--applied` em vez de `--rolled-back` (vê [documentação Prisma](https://www.prisma.io/docs/guides/migrate/production-troubleshooting)).
+Se o schema já estiver 100% aplicado e só o histórico Prisma estiver errado, usa `--applied` em vez de `--rolled-back` (vê [documentação Prisma](https://www.prisma.io/docs/guides/migrate/production-troubleshooting)).
 
 Para deploy, configure as variáveis de ambiente no provedor e use um PostgreSQL compatível, como Neon, Supabase, Railway ou outra instância PostgreSQL gerenciada.
 
