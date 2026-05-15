@@ -29,10 +29,15 @@ export async function uploadPublicBlob(
   file: Blob,
   contentType: string,
 ): Promise<{ url: string }> {
+  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+  if (!token) {
+    throw new Error("BLOB_READ_WRITE_TOKEN em falta.");
+  }
   const blob = await put(pathname, file, {
     access: "public",
     contentType,
     addRandomSuffix: true,
+    token,
   });
   return { url: blob.url };
 }
@@ -49,8 +54,10 @@ export async function uploadPublicImage(
 /** Remove blob anterior se a URL for do Vercel Blob. */
 export async function deleteBlobUrlIfStored(url: string | null | undefined): Promise<void> {
   if (!isVercelBlobUrl(url)) return;
+  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+  if (!token) return;
   try {
-    await del(url!);
+    await del(url!, { token });
   } catch {
     // Objeto já removido ou indisponível — não bloquear o fluxo.
   }
