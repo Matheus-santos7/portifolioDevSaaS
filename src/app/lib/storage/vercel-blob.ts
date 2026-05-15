@@ -1,4 +1,4 @@
-import { del, put } from "@vercel/blob";
+import { del, put, type PutCommandOptions } from "@vercel/blob";
 
 import { isVercelBlobUrl } from "@/app/lib/storage/blob-url";
 
@@ -79,21 +79,19 @@ export async function uploadPublicBlob(
   }
 
   const fromEnv = blobPutAccessFromEnv();
-  const attempts: BlobAccess[] = fromEnv
-    ? [fromEnv]
-    : ["public", "private"];
+  const attempts: BlobAccess[] = fromEnv ? [fromEnv] : ["public", "private"];
 
   let lastErr: unknown;
   for (const access of attempts) {
     try {
-      // SDK types só expõem `public`; stores Private aceitam `private` em runtime.
-      const blob = await put(pathname, file, {
-        access: access as "public",
+      const options = {
+        access,
         contentType,
         addRandomSuffix: true,
         token,
-      });
-      return { url: blob.url };
+      } as PutCommandOptions;
+      const uploaded = await put(pathname, file, options);
+      return { url: uploaded.url };
     } catch (e) {
       lastErr = e;
       const msg = e instanceof Error ? e.message : String(e);

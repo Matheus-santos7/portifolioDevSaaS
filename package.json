@@ -13,8 +13,8 @@
     "db:seed": "prisma db seed"
   },
   "dependencies": {
-    "@vercel/blob": "^1.1.1",
     "@prisma/client": "^6.2.1",
+    "@vercel/blob": "^2.3.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "is-dom-node-list": "^1.2.1",
