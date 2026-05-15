@@ -7,8 +7,8 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 
 import AdminProjectsCarousel from "@/app/features/admin/projects/AdminProjectsCarousel";
 import type { ProjectPublic } from "@/app/features/public/projects/server/get-project";
-import { hasManagedProjectCover } from "@/app/lib/storage/blob-url";
 import { resolveProjectCoverSrc } from "@/app/features/public/projects/server/resolve-project-cover-src";
+import { hasManagedProjectCover } from "@/app/lib/storage/blob-url";
 
 const emptyForm = {
   name: "",
