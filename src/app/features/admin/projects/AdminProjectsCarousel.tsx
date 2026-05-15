@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import type { ProjectCarouselItem } from "@/app/features/_components/projects/project-carousel-types";
 import ProjectDetails from "@/app/features/_components/projects/ProjectDetails";
-import GenericCarousel from "@/app/features/_components/ui/GenericCarousel";
+import GenericCarousel from "@/app/features/_components/ui/Carousel";
 
 type AdminProjectsCarouselProps = {
   projects: ProjectCarouselItem[];

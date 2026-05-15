@@ -1,6 +1,6 @@
 /**
- * Upload de foto de perfil: grava bytes no PostgreSQL via POST /api/account/avatar.
- * Resposta devolve `avatarUrl` com path `/api/avatar/...` para usar em `<Image src />`.
+ * Upload de foto de perfil via POST /api/account/avatar (Vercel Blob).
+ * Resposta devolve `avatarUrl` (HTTPS público) para usar em `<Image src />`.
  */
 export async function uploadProfileAvatarFile(file: File): Promise<
   { ok: true; avatarUrl: string } | { ok: false; error: string }

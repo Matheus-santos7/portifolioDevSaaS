@@ -1,7 +1,7 @@
 import { Level, type Technology } from "@prisma/client";
 
 import { db } from "@/app/core/db/prisma";
-import { getSkills, getTechnologyCatalog } from "@/app/features/public/skills/get-skills";
+import { getSkills, getTechnologyCatalog } from "@/app/features/public/skills/server/get-skills";
 import { listLocalTechIcons } from "@/app/lib/technologies/local-public-tech-icons";
 import { normalizeTechnologyNameKey } from "@/app/lib/technologies/technology-name-key";
 import { guessPresetSvgUrl } from "@/app/lib/technologies/technology-presets";

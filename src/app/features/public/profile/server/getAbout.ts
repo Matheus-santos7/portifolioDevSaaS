@@ -6,7 +6,6 @@ import { resolveProfileAvatarSrc } from "@/app/features/public/profile/server/re
 export async function getAboutSectionData(profileId: string) {
   const profile = await db.profile.findUnique({
     where: { id: profileId },
-    omit: { avatarImage: true, curriculumPdf: true },
   });
   const education = await getEducation(profileId);
 

@@ -2,7 +2,6 @@ import type { Prisma } from "@prisma/client";
 
 import { db } from "@/app/core/db/prisma";
 
-/** Campos utilizados na UI — exclui `coverImage` (bytes) do transporte RSC. */
 const projectPublicSelect = {
   id: true,
   name: true,
@@ -13,8 +12,6 @@ const projectPublicSelect = {
   profileId: true,
   createdAt: true,
   updatedAt: true,
-  hasStoredCover: true,
-  coverMime: true,
 } satisfies Prisma.ProjectSelect;
 
 export type ProjectPublic = Prisma.ProjectGetPayload<{

@@ -1,7 +1,7 @@
 "use client";
 
 import { TechnologyIcon } from "@/app/features/_components/skills/TechnologyIcon";
-import type { SkillWithTechnology } from "@/app/features/public/skills/get-skills";
+import type { SkillWithTechnology } from "@/app/features/public/skills/server/get-skills";
 
 type SkillsPillsClientProps = {
   skills: SkillWithTechnology[];

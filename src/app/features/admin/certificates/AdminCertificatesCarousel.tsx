@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import type { CertificateCarouselItem } from "@/app/features/_components/certificates/certificate-carousel-types";
 import CertificateDetails from "@/app/features/_components/certificates/CertificateDetails";
-import GenericCarousel from "@/app/features/_components/ui/GenericCarousel";
+import GenericCarousel from "@/app/features/_components/ui/Carousel";
 
 type AdminCertificatesCarouselProps = {
   certificates: CertificateCarouselItem[];

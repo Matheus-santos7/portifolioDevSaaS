@@ -5,19 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 
+import { isVercelBlobUrl } from "@/app/lib/storage/blob-url";
+
 type CurriculumManagerProps = {
-  profileId: string;
   slug: string;
-  hasStoredCurriculum: boolean;
-  updatedAt: string;
+  curriculum: string | null;
 };
 
-export function CurriculumManager({
-  profileId,
-  slug,
-  hasStoredCurriculum,
-  updatedAt,
-}: CurriculumManagerProps) {
+export function CurriculumManager({ slug, curriculum }: CurriculumManagerProps) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -64,20 +59,23 @@ export function CurriculumManager({
         credentials: "include",
       });
       if (!res.ok) {
-        setMessage("Não foi possível remover o PDF.");
+        const json = (await res.json().catch(() => ({}))) as { error?: string };
+        setMessage(json.error ?? "Não foi possível remover o PDF.");
         return;
       }
-      setMessage("PDF removido.");
+      setMessage("Currículo público removido.");
       refreshState();
     } finally {
       setPending(false);
     }
   }
 
-  const hasPdf = hasStoredCurriculum;
-  const downloadHref = hasPdf
-    ? `/api/curriculum/${profileId}?v=${new Date(updatedAt).getTime()}`
-    : null;
+  const trimmedCv = curriculum?.trim() ?? "";
+  const hasLink =
+    trimmedCv.startsWith("/") ||
+    trimmedCv.startsWith("http://") ||
+    trimmedCv.startsWith("https://");
+  const blobPdf = Boolean(trimmedCv && isVercelBlobUrl(trimmedCv));
 
   return (
     <section className="mb-10 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -94,6 +92,21 @@ export function CurriculumManager({
         </Link>
         .
       </p>
+
+      {hasLink && !blobPdf ? (
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          Está definido um{" "}
+          <a
+            href={trimmedCv}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
+          >
+            link externo
+          </a>
+          . Carregar um PDF abaixo substitui esse link pelo ficheiro no armazenamento.
+        </p>
+      ) : null}
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50">
@@ -112,31 +125,43 @@ export function CurriculumManager({
           />
         </label>
 
-        {hasPdf ? (
+        {hasLink ? (
           <>
             <a
-              href={downloadHref ?? "#"}
+              href={trimmedCv}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700"
             >
               <FileDown className="h-4 w-4 shrink-0" aria-hidden />
-              Pré-visualizar PDF
+              Abrir currículo
             </a>
-            <button
-              type="button"
-              onClick={() => void onRemovePdf()}
-              disabled={pending}
-              className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm text-red-700 hover:bg-red-50 disabled:opacity-50 dark:border-red-900 dark:text-red-300 dark:hover:bg-red-950/40"
-            >
-              <Trash2 className="h-4 w-4" aria-hidden />
-              Remover PDF
-            </button>
+            {blobPdf ? (
+              <button
+                type="button"
+                onClick={() => void onRemovePdf()}
+                disabled={pending}
+                className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm text-red-700 hover:bg-red-50 disabled:opacity-50 dark:border-red-900 dark:text-red-300 dark:hover:bg-red-950/40"
+              >
+                <Trash2 className="h-4 w-4" aria-hidden />
+                Remover PDF
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => void onRemovePdf()}
+                disabled={pending}
+                className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm text-red-700 hover:bg-red-50 disabled:opacity-50 dark:border-red-900 dark:text-red-300 dark:hover:bg-red-950/40"
+              >
+                <Trash2 className="h-4 w-4" aria-hidden />
+                Remover link
+              </button>
+            )}
           </>
         ) : null}
       </div>
 
-      {!hasPdf ? (
+      {!hasLink ? (
         <p className="mt-3 text-sm text-amber-800 dark:text-amber-200/90">
           Ainda sem currículo público — carregue um PDF.
         </p>

@@ -1,5 +1,12 @@
 import { db } from "@/app/core/db/prisma";
-import { projectWithoutCoverBlob } from "@/app/features/public/projects/project-public";
+import type { ProjectPublic } from "@/app/features/public/projects/server/get-project";
+import { isVercelBlobUrl } from "@/app/lib/storage/blob-url";
+import {
+  deleteBlobUrlIfStored,
+  isBlobStorageConfigured,
+  mimeToFileExtension,
+  uploadPublicImage,
+} from "@/app/lib/storage/vercel-blob";
 import {
   buildProjectUpdateData,
   DEFAULT_PROJECT_BACKGROUND_COVER,
@@ -10,8 +17,6 @@ import {
 const MAX_COVER_BYTES = 1024 * 1024;
 const ALLOWED_COVER_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
 
-type ProjectSerialized = ReturnType<typeof projectWithoutCoverBlob>;
-
 type AccountProjectMutationError = { ok: false; status: number; error: string };
 
 type Ok<T> = { ok: true; data: T };
@@ -19,7 +24,7 @@ type Ok<T> = { ok: true; data: T };
 export async function createAccountProject(
   profileId: string,
   body: ProjectWriteBody,
-): Promise<Ok<ProjectSerialized> | AccountProjectMutationError> {
+): Promise<Ok<ProjectPublic> | AccountProjectMutationError> {
   const validated = validateProjectCreateInput(body);
   if (!validated.ok) {
     return { ok: false, status: validated.status, error: validated.error };
@@ -32,14 +37,16 @@ export async function createAccountProject(
     },
   });
 
-  return { ok: true, data: projectWithoutCoverBlob(project) };
+  return { ok: true, data: project };
 }
 
 export async function updateAccountProject(
   profileId: string,
   projectId: string,
   body: ProjectWriteBody,
-): Promise<Ok<ProjectSerialized> | AccountProjectMutationError | { ok: false; status: 404; error: string }> {
+): Promise<
+  Ok<ProjectPublic> | AccountProjectMutationError | { ok: false; status: 404; error: string }
+> {
   const project = await db.project.findFirst({
     where: { id: projectId, profileId },
   });
@@ -57,7 +64,7 @@ export async function updateAccountProject(
     data: updateData.value,
   });
 
-  return { ok: true, data: projectWithoutCoverBlob(updated) };
+  return { ok: true, data: updated };
 }
 
 export async function deleteAccountProject(
@@ -71,6 +78,7 @@ export async function deleteAccountProject(
     return { ok: false, status: 404, error: "Not found" };
   }
 
+  await deleteBlobUrlIfStored(project.backgroundCover);
   await db.project.delete({ where: { id: project.id } });
   return { ok: true, data: { success: true as const } };
 }
@@ -79,7 +87,9 @@ export async function uploadAccountProjectCover(
   profileId: string,
   projectId: string,
   file: Blob,
-): Promise<Ok<ProjectSerialized> | AccountProjectMutationError | { ok: false; status: 404; error: string }> {
+): Promise<
+  Ok<ProjectPublic> | AccountProjectMutationError | { ok: false; status: 404; error: string }
+> {
   const project = await db.project.findFirst({
     where: { id: projectId, profileId },
   });
@@ -100,25 +110,37 @@ export async function uploadAccountProjectCover(
     return { ok: false, status: 400, error: "Arquivo deve ter até 1 MB." };
   }
 
-  const buf = Buffer.from(await file.arrayBuffer());
+  if (!isBlobStorageConfigured()) {
+    return {
+      ok: false,
+      status: 503,
+      error: "Armazenamento de imagens não configurado (BLOB_READ_WRITE_TOKEN).",
+    };
+  }
+
+  const ext = mimeToFileExtension(mime);
+  const pathname = `projects/${profileId}/${projectId}/cover.${ext}`;
+
+  await deleteBlobUrlIfStored(
+    isVercelBlobUrl(project.backgroundCover) ? project.backgroundCover : null,
+  );
+
+  const { url } = await uploadPublicImage(pathname, file, mime);
 
   const updated = await db.project.update({
     where: { id: project.id },
     data: {
-      coverImage: buf,
-      coverMime: mime,
-      hasStoredCover: true,
-      backgroundCover: DEFAULT_PROJECT_BACKGROUND_COVER,
+      backgroundCover: url,
     },
   });
 
-  return { ok: true, data: projectWithoutCoverBlob(updated) };
+  return { ok: true, data: updated };
 }
 
 export async function removeAccountProjectCover(
   profileId: string,
   projectId: string,
-): Promise<Ok<ProjectSerialized> | { ok: false; status: 404; error: string }> {
+): Promise<Ok<ProjectPublic> | { ok: false; status: 404; error: string }> {
   const project = await db.project.findFirst({
     where: { id: projectId, profileId },
   });
@@ -126,15 +148,14 @@ export async function removeAccountProjectCover(
     return { ok: false, status: 404, error: "Not found" };
   }
 
+  await deleteBlobUrlIfStored(project.backgroundCover);
+
   const updated = await db.project.update({
     where: { id: project.id },
     data: {
-      coverImage: null,
-      coverMime: null,
-      hasStoredCover: false,
       backgroundCover: DEFAULT_PROJECT_BACKGROUND_COVER,
     },
   });
 
-  return { ok: true, data: projectWithoutCoverBlob(updated) };
+  return { ok: true, data: updated };
 }

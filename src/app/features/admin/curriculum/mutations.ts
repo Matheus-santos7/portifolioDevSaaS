@@ -1,4 +1,10 @@
 import { db } from "@/app/core/db/prisma";
+import { isVercelBlobUrl } from "@/app/lib/storage/blob-url";
+import {
+  deleteBlobUrlIfStored,
+  isBlobStorageConfigured,
+  uploadPublicBlob,
+} from "@/app/lib/storage/vercel-blob";
 
 const CURRICULUM_MAX_BYTES = 4 * 1024 * 1024;
 const CURRICULUM_ALLOWED_TYPES = new Set(["application/pdf"]);
@@ -28,28 +34,44 @@ export async function uploadAccountCurriculum(
     return { ok: false, status: 400, error: "O PDF deve ter no máximo 4 MB." };
   }
 
+  if (!isBlobStorageConfigured()) {
+    return {
+      ok: false,
+      status: 503,
+      error: "Armazenamento não configurado (BLOB_READ_WRITE_TOKEN).",
+    };
+  }
+
   const buf = Buffer.from(await file.arrayBuffer());
   if (!looksLikePdf(buf)) {
     return { ok: false, status: 400, error: "O ficheiro não parece um PDF válido." };
   }
 
+  const existing = await db.profile.findUnique({
+    where: { id: profileId },
+    select: { curriculum: true },
+  });
+  if (!existing) {
+    return { ok: false, status: 404, error: "Perfil não encontrado." };
+  }
+
+  await deleteBlobUrlIfStored(
+    existing.curriculum && isVercelBlobUrl(existing.curriculum) ? existing.curriculum : null,
+  );
+
+  const pathname = `curricula/${profileId}/cv.pdf`;
+  const { url } = await uploadPublicBlob(pathname, file, mime);
+
   const updated = await db.profile.update({
     where: { id: profileId },
-    data: {
-      curriculumPdf: buf,
-      curriculumMime: mime,
-      hasStoredCurriculum: true,
-      curriculum: null,
-    },
+    data: { curriculum: url },
   });
-
-  const curriculumHref = `/api/curriculum/${updated.id}?v=${updated.updatedAt.getTime()}`;
 
   return {
     ok: true,
     data: {
       ok: true as const,
-      curriculumHref,
+      curriculumHref: url,
       updatedAt: updated.updatedAt.toISOString(),
     },
   };
@@ -57,14 +79,22 @@ export async function uploadAccountCurriculum(
 
 export async function deleteAccountCurriculum(
   profileId: string,
-): Promise<{ ok: true; data: { ok: true } }> {
+): Promise<{ ok: true; data: { ok: true } } | { ok: false; status: 404; error: string }> {
+  const existing = await db.profile.findUnique({
+    where: { id: profileId },
+    select: { curriculum: true },
+  });
+  if (!existing) {
+    return { ok: false, status: 404, error: "Perfil não encontrado." };
+  }
+
+  await deleteBlobUrlIfStored(
+    existing.curriculum && isVercelBlobUrl(existing.curriculum) ? existing.curriculum : null,
+  );
+
   await db.profile.update({
     where: { id: profileId },
-    data: {
-      curriculumPdf: null,
-      curriculumMime: null,
-      hasStoredCurriculum: false,
-    },
+    data: { curriculum: null },
   });
 
   return { ok: true, data: { ok: true as const } };

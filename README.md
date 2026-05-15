@@ -183,8 +183,20 @@ prisma generate && node scripts/run-build-migrations.mjs && next build
 
 Comportamento importante:
 
-- em build local, `prisma migrate deploy` é ignorado por padrão;
-- em CI, Vercel ou com `RUN_DB_MIGRATIONS=true`, as migrations são aplicadas antes do build.
+- em build local, `prisma migrate deploy` é ignorado por defeito (usa `RUN_BUILD_MIGRATIONS=1` para forçar);
+- na Vercel (`VERCEL=1`) ou em CI (`CI=true`), as migrations aplicam-se antes do `next build`;
+- `SKIP_BUILD_MIGRATIONS=1` na Vercel desativa migrate no build (só em cenários excecionais).
+
+### P3009 — migração `20260509203000_technology_catalog_skill_fk` falhada
+
+Se o deploy falhar com **P3009** e o log da base mencionar **`Technology` already exists**, a migração no repo é **idempotente** (reaplicável). Na Neon/produção corre **uma vez**, com `DATABASE_URL` de produção:
+
+```bash
+pnpm prisma migrate resolve --rolled-back 20260509203000_technology_catalog_skill_fk
+pnpm prisma migrate deploy
+```
+
+Depois volta a fazer deploy na Vercel. Se o schema já estiver 100% aplicado e só o histórico Prisma estiver errado, usa `--applied` em vez de `--rolled-back` (vê [documentação Prisma](https://www.prisma.io/docs/guides/migrate/production-troubleshooting)).
 
 Para deploy, configure as variáveis de ambiente no provedor e use um PostgreSQL compatível, como Neon, Supabase, Railway ou outra instância PostgreSQL gerenciada.
 
@@ -199,9 +211,6 @@ Para deploy, configure as variáveis de ambiente no provedor e use um PostgreSQL
 - `/api/account/certificates/[id]`
 - `/api/account/skills`
 - `/api/technologies`
-- `/api/avatar/[profileId]`
-- `/api/curriculum/[profileId]`
-- `/api/project-cover/[projectId]`
 
 ## Qualidade e segurança
 - dashboard protegido por helpers centrais de sessão;

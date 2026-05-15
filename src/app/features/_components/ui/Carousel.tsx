@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 
 import { useCarouselScroll } from "@/app/core/hooks/useCarouselScroll";
 
-type GenericCarouselProps<T extends { id: string }> = {
+type CarouselProps<T extends { id: string }> = {
   items: T[];
   renderItem: (item: T) => ReactNode;
   sectionTitle?: ReactNode;
@@ -18,7 +18,7 @@ type GenericCarouselProps<T extends { id: string }> = {
   enableSnap?: boolean;
 };
 
-export default function GenericCarousel<T extends { id: string }>({
+export default function Carousel<T extends { id: string }>({
   items,
   renderItem,
   sectionTitle,
@@ -29,7 +29,7 @@ export default function GenericCarousel<T extends { id: string }>({
   nextButtonLabel = "Avançar itens",
   centerWhenNotOverflowing = false,
   enableSnap = false,
-}: GenericCarouselProps<T>) {
+}: CarouselProps<T>) {
   const {
     activeIndex,
     canScrollLeft,

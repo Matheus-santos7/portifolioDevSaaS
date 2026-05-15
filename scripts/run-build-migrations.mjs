@@ -29,8 +29,20 @@ if (!onVercel && !onCi && !forceLocal) {
   process.exit(0);
 }
 
-execSync("pnpm exec prisma migrate deploy", {
-  cwd: root,
-  stdio: "inherit",
-  env: process.env,
-});
+try {
+  execSync("pnpm exec prisma migrate deploy", {
+    cwd: root,
+    stdio: "inherit",
+    env: process.env,
+  });
+} catch {
+  console.error(`
+[run-build-migrations] prisma migrate deploy falhou.
+
+Se o erro for P3009 (migração falhada), em produção corre normalmente:
+  pnpm prisma migrate resolve --rolled-back 20260509203000_technology_catalog_skill_fk
+  pnpm prisma migrate deploy
+(com DATABASE_URL da base certa). Ver README → «P3009».
+`);
+  process.exit(1);
+}

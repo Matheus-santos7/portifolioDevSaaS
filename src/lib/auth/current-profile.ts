@@ -23,10 +23,6 @@ export const getCurrentProfile = cache(async function getCurrentProfile() {
       id: session.selectedProfileId,
       userId: session.userId,
     },
-    omit: {
-      avatarImage: true,
-      curriculumPdf: true,
-    },
   });
 });
 

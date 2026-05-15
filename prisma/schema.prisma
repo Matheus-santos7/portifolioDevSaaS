@@ -22,21 +22,14 @@ model Profile {
   /** Texto exibido após «Graduação» ou «Pós-graduado» (ex.: nome do curso). */
   degreeHighlight String      @default("")
   avatarUrl     String?
-  avatarImage   Bytes?
-  avatarMime    String?
-  /** true quando há imagem guardada na BD (evita ler BYTEA só para saber). */
-  hasStoredAvatar Boolean @default(false)
   email         String?
   phone         String?
   linkedin      String?
   instagram     String?
   notion        String?
   github        String?
-  /** URL externa alternativa ao PDF armazenado (ex.: Google Drive). */
-  curriculum         String?
-  curriculumPdf      Bytes?
-  curriculumMime     String?
-  hasStoredCurriculum Boolean @default(false)
+  /** URL do currículo (link externo ou PDF no Vercel Blob). */
+  curriculum String?
   objectives    String
   currentSector String
   targetSector  String
@@ -122,10 +115,6 @@ model Project {
   name            String
   description     String
   backgroundCover String
-  /// Imagem da capa armazenada na BD (alternativa a URL em `backgroundCover`).
-  coverImage      Bytes?
-  coverMime       String?
-  hasStoredCover  Boolean  @default(false)
   repositorio     String
   linkView        String
   profileId       String?

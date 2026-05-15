@@ -1,5 +1,6 @@
-import { getSkills, getTechnologyCatalog } from "@/app/features/public/skills/get-skills";
 import { listLocalTechIcons } from "@/app/lib/technologies/local-public-tech-icons";
+
+import { getSkills, getTechnologyCatalog } from "./get-skills";
 
 export async function getPublicSkillsSectionData(profileId: string) {
   return {

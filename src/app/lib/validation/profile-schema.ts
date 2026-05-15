@@ -44,15 +44,10 @@ export async function buildProfileUpdateData(
 
   if (body.clearProfilePhoto === true) {
     data.avatarUrl = null;
-    data.avatarImage = null;
-    data.avatarMime = null;
-    data.hasStoredAvatar = false;
   }
 
   if (body.clearStoredCurriculum === true) {
-    data.curriculumPdf = null;
-    data.curriculumMime = null;
-    data.hasStoredCurriculum = false;
+    data.curriculum = null;
   }
 
   if (typeof body.name === "string" && body.name.trim()) data.name = body.name.trim();
@@ -64,17 +59,12 @@ export async function buildProfileUpdateData(
 
     if (!normalized) {
       data.avatarUrl = null;
-    } else if (normalized.startsWith("/api/avatar/")) {
-      // Foto armazenada em blob: não sobrescrever com a URL interna.
     } else if (
       normalized.startsWith("/") ||
       normalized.startsWith("http://") ||
       normalized.startsWith("https://")
     ) {
       data.avatarUrl = normalized;
-      data.avatarImage = null;
-      data.avatarMime = null;
-      data.hasStoredAvatar = false;
     } else {
       return fail("Invalid avatar url");
     }

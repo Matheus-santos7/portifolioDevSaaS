@@ -10,9 +10,8 @@ type ContactFooterProps = {
 
 export default async function ContactFooter({ profileId }: ContactFooterProps = {}) {
   const profile = profileId
-      ? await db.profile.findUnique({
+    ? await db.profile.findUnique({
         where: { id: profileId },
-        omit: { avatarImage: true, curriculumPdf: true },
       })
     : await getProfile();
 

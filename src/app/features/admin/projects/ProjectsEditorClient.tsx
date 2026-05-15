@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
 import AdminProjectsCarousel from "@/app/features/admin/projects/AdminProjectsCarousel";
-import type { ProjectPublic } from "@/app/features/public/projects/get-project";
-import { resolveProjectCoverSrc } from "@/app/features/public/projects/resolve-project-cover-src";
+import type { ProjectPublic } from "@/app/features/public/projects/server/get-project";
+import { hasManagedProjectCover } from "@/app/lib/storage/blob-url";
+import { resolveProjectCoverSrc } from "@/app/features/public/projects/server/resolve-project-cover-src";
 
 const emptyForm = {
   name: "",
@@ -23,7 +24,7 @@ function projectToForm(p: ProjectPublic): FormState {
   return {
     name: p.name,
     description: p.description,
-    backgroundCover: p.hasStoredCover
+    backgroundCover: hasManagedProjectCover(p)
       ? ""
       : p.backgroundCover === "/images/projects/default-project.png"
         ? ""
@@ -128,15 +129,11 @@ export default function ProjectsEditorClient({
       const row = projects.find((x) => x.id === editingId);
       if (!row) return null;
 
+      const managedCover = hasManagedProjectCover(row) && !pendingRemoveCover;
       const src = resolveProjectCoverSrc({
-        id: row.id,
-        updatedAt: row.updatedAt,
-        hasStoredCover: pendingRemoveCover ? false : row.hasStoredCover,
-        coverMime: pendingRemoveCover ? null : row.coverMime,
-        backgroundCover:
-          !row.hasStoredCover || pendingRemoveCover
-            ? form.backgroundCover.trim() || "/images/projects/default-project.png"
-            : row.backgroundCover,
+        backgroundCover: managedCover
+          ? row.backgroundCover
+          : form.backgroundCover.trim() || "/images/projects/default-project.png",
       });
       if (src === "/images/projects/default-project.png") return null;
       return src;
@@ -217,7 +214,8 @@ export default function ProjectsEditorClient({
     };
 
     const mayTouchExternalCoverUrl =
-      !editingRow?.hasStoredCover ||
+      !editingRow ||
+      !hasManagedProjectCover(editingRow) ||
       pendingRemoveCover ||
       Boolean(coverFile);
 
@@ -324,7 +322,7 @@ export default function ProjectsEditorClient({
       ? projects.find((x) => x.id === editingId)
       : undefined;
   const showExternalUrlField =
-    !editingRow?.hasStoredCover || pendingRemoveCover;
+    !editingRow || !hasManagedProjectCover(editingRow) || pendingRemoveCover;
 
   return (
     <div className="mt-4 space-y-4">
@@ -453,7 +451,9 @@ export default function ProjectsEditorClient({
                       onClick={() => {
                         setCoverFile(null);
                         if (fileInputRef.current) fileInputRef.current.value = "";
-                        if (editingRow?.hasStoredCover) setPendingRemoveCover(true);
+                        if (editingRow && hasManagedProjectCover(editingRow)) {
+                          setPendingRemoveCover(true);
+                        }
                         setForm((f) => ({ ...f, backgroundCover: "" }));
                       }}
                     >

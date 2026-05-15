@@ -12,7 +12,7 @@ import AdminAboutSectionClient from "@/app/features/admin/profile/AdminAboutSect
 import ProjectsEditorClient from "@/app/features/admin/projects/ProjectsEditorClient";
 import SkillsEditorClient from "@/app/features/admin/skills/SkillsEditorClient";
 import { resolveCurriculumHref } from "@/app/features/public/profile/server/resolve-curriculum-href";
-import { getAdminSkillsSectionData } from "@/app/features/public/skills/getSkillsSectionData";
+import { getAdminSkillsSectionData } from "@/app/features/public/skills/server/getSkillsSectionData";
 import { AppBackground } from "@/app/layout/AppBackground";
 import { requireCurrentProfile } from "@/app/lib/auth/current-profile";
 
@@ -36,12 +36,7 @@ export default async function DashboardScreen() {
       <main>
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <AboutSection profileId={profileId} View={AdminAboutSectionClient} />
-          <CurriculumManager
-            profileId={profileId}
-            slug={profile.slug}
-            hasStoredCurriculum={profile.hasStoredCurriculum}
-            updatedAt={profile.updatedAt.toISOString()}
-          />
+          <CurriculumManager slug={profile.slug} curriculum={profile.curriculum} />
           <SkillsSection
             profileId={profileId}
             View={SkillsEditorClient}

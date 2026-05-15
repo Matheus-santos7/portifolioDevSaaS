@@ -12,7 +12,6 @@ import {
   formationLine,
   isSafeImageSrc,
 } from "@/app/features/public/profile/server/about-section-utils";
-import { isDbAvatarSrc } from "@/app/features/public/profile/server/avatar-display";
 import type { AboutSectionViewModel } from "@/app/features/public/profile/server/profileTypes";
 
 export default function AdminAboutSectionClient({
@@ -183,7 +182,7 @@ export default function AdminAboutSectionClient({
                   width={128}
                   height={128}
                   className="h-full w-full object-cover"
-                  unoptimized={isDbAvatarSrc(currentDisplayAvatar)}
+                  unoptimized={currentDisplayAvatar.startsWith("blob:")}
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center px-2 text-center text-sm text-gray-400 dark:text-gray-300">

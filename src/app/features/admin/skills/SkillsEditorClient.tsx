@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 
 import { syncSkillsAction } from "@/app/features/admin/skills/actions";
-import type { SkillWithTechnology } from "@/app/features/public/skills/get-skills";
+import type { SkillWithTechnology } from "@/app/features/public/skills/server/get-skills";
 import SkillsPillsClient from "@/app/features/public/skills/SkillsPillsClient";
 import type { LocalTechIcon } from "@/app/lib/technologies/local-public-tech-icons";
 import { normalizeTechnologyNameKey } from "@/app/lib/technologies/technology-name-key";

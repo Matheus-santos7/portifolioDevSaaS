@@ -11,7 +11,7 @@ import PublicAboutSectionClient from "@/app/features/public/profile/PublicAboutS
 import { getProfile } from "@/app/features/public/profile/server/getProfile";
 import { resolveCurriculumHref } from "@/app/features/public/profile/server/resolve-curriculum-href";
 import PublicProjectsCarousel from "@/app/features/public/projects/PublicProjectsCarousel";
-import { getPublicSkillsSectionData } from "@/app/features/public/skills/getSkillsSectionData";
+import { getPublicSkillsSectionData } from "@/app/features/public/skills/server/getSkillsSectionData";
 import SkillsPillsClient from "@/app/features/public/skills/SkillsPillsClient";
 import { AppBackground } from "@/app/layout/AppBackground";
 import { getSession } from "@/app/lib/auth/session";

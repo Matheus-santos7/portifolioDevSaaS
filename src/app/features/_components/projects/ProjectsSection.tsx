@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 
-import { getProjectsSectionData } from "@/app/features/public/projects/getProjectsSectionData";
+import { getProjectsSectionData } from "@/app/features/public/projects/server/getProjectsSectionData";
 
 type ProjectsSectionData = Awaited<ReturnType<typeof getProjectsSectionData>>;
 

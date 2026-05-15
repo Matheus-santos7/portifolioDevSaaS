@@ -36,5 +36,8 @@ export async function DELETE() {
   }
 
   const result = await deleteAccountCurriculum(profile.id);
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: result.status });
+  }
   return NextResponse.json(result.data);
 }

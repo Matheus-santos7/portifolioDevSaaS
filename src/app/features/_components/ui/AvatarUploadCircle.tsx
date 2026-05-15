@@ -4,8 +4,6 @@ import { Loader2, Upload } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 
-import { isDbAvatarSrc } from "@/app/features/public/profile/server/avatar-display";
-
 type AvatarUploadCircleProps = {
   sizePx: number;
   displaySrc: string | undefined;
@@ -95,7 +93,7 @@ export function AvatarUploadCircle({
         width={sizePx}
         height={sizePx}
         className="h-full w-full object-cover"
-        unoptimized={isDbAvatarSrc(displaySrc!)}
+        unoptimized={displaySrc!.startsWith("blob:")}
       />
     ) : (
       <div className="flex h-full flex-col items-center justify-center gap-1 px-2 text-center">

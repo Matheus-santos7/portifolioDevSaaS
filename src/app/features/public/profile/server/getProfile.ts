@@ -6,9 +6,5 @@ export async function getProfile(slug?: string) {
       ...(slug ? { slug } : {}),
       isPublic: true,
     },
-    omit: {
-      avatarImage: true,
-      curriculumPdf: true,
-    },
   });
 }
