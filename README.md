@@ -187,18 +187,24 @@ Comportamento importante:
 - na Vercel (`VERCEL=1`) ou em CI (`CI=true`), as migrations aplicam-se antes do `next build`;
 - `SKIP_BUILD_MIGRATIONS=1` na Vercel desativa migrate no build (só em cenários excecionais).
 
-### P3009 — migração `20260509203000_technology_catalog_skill_fk` falhada
+### Migrações no deploy (Vercel / CI)
 
-Em **Vercel / CI**, o script `scripts/run-build-migrations.mjs` tenta **recuperar automaticamente** (várias passagens): para migrações conhecidas com SQL **idempotente** (`20260509203000_technology_catalog_skill_fk`, `20260509160000_certificate_kind`), se `migrate deploy` falhar com bloqueio ou erro de «already exists», corre `migrate resolve --rolled-back` e volta a executar `migrate deploy`.
+O script `scripts/run-build-migrations.mjs` corre `prisma migrate deploy` antes do `next build`.
 
-Se precisares de corrigir manualmente na Neon (**outra** migração ou caso não coberto), com `DATABASE_URL` de produção:
+**Recuperação automática:** se o deploy falhar, o Prisma indica a migração falhada (`Migration name: …` em **P3018**, ou ``The `…` migration`` em **P3009**). O script extrai esse nome e, só se estiver na **allowlist** de migrações com SQL **idempotente** no repositório, corre `migrate resolve --rolled-back` e volta a tentar `deploy` (até 12 ciclos). Isto evita rollback na migração errada quando o log menciona várias migrações.
+
+Migrações na allowlist: `20260509160000_certificate_kind`, `20260509203000_technology_catalog_skill_fk`, `20260509220000_technology_svg_url`.
+
+**Reset total (base de teste, poucos dados):** na Vercel define **`PRISMA_RESET_DB_ON_DEPLOY=1`** (só **uma vez**), faz deploy — o script corre `prisma migrate reset --force` (apaga **todos** os dados e reaplica todas as migrations). **Remove a variável** a seguir para não apagar dados em cada build.
+
+**Manual** (produção ou migração fora da allowlist), com `DATABASE_URL` certo:
 
 ```bash
-pnpm prisma migrate resolve --rolled-back 20260509203000_technology_catalog_skill_fk
+pnpm prisma migrate resolve --rolled-back <nome_da_migração>
 pnpm prisma migrate deploy
 ```
 
-Se o schema já estiver 100% aplicado e só o histórico Prisma estiver errado, usa `--applied` em vez de `--rolled-back` (vê [documentação Prisma](https://www.prisma.io/docs/guides/migrate/production-troubleshooting)).
+Se o schema já estiver aplicado e só o histórico `_prisma_migrations` estiver errado, usa `--applied` (vê [documentação Prisma](https://www.prisma.io/docs/guides/migrate/production-troubleshooting)).
 
 Para deploy, configure as variáveis de ambiente no provedor e use um PostgreSQL compatível, como Neon, Supabase, Railway ou outra instância PostgreSQL gerenciada.
 
