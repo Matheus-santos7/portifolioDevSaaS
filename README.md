@@ -189,9 +189,9 @@ Comportamento importante:
 
 ### P3009 — migração `20260509203000_technology_catalog_skill_fk` falhada
 
-Em **Vercel / CI**, o script `scripts/run-build-migrations.mjs` tenta **recuperar automaticamente**: se `migrate deploy` falhar com **P3009** só nesta migração, corre `migrate resolve --rolled-back` e volta a executar `migrate deploy` **uma vez**. Isso funciona em conjunto com o SQL **idempotente** dessa migração no repositório.
+Em **Vercel / CI**, o script `scripts/run-build-migrations.mjs` tenta **recuperar automaticamente** (várias passagens): para migrações conhecidas com SQL **idempotente** (`20260509203000_technology_catalog_skill_fk`, `20260509160000_certificate_kind`), se `migrate deploy` falhar com bloqueio ou erro de «already exists», corre `migrate resolve --rolled-back` e volta a executar `migrate deploy`.
 
-Se precisares de corrigir manualmente na Neon (ou se for **outra** migração falhada), com `DATABASE_URL` de produção:
+Se precisares de corrigir manualmente na Neon (**outra** migração ou caso não coberto), com `DATABASE_URL` de produção:
 
 ```bash
 pnpm prisma migrate resolve --rolled-back 20260509203000_technology_catalog_skill_fk

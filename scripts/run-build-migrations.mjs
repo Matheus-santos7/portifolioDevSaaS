@@ -4,11 +4,11 @@
  * - Em Vercel (`VERCEL=1`) ou CI (`CI=true`): corre `prisma migrate deploy`.
  * - Em máquina local: ignora por defeito (Neon suspenso / rede / sem necessidade).
  * - `RUN_BUILD_MIGRATIONS=1`: força migrate no build local.
- * - `SKIP_BUILD_MIGRATIONS=1`: nunca corre migrate (útil se o deploy aplica migrações à parte).
+ * - `SKIP_BUILD_MIGRATIONS=1`: nunca corre migrate.
  *
- * Recuperação automática: se `migrate deploy` falhar com P3009 na migração do catálogo
- * Technology (histórico falhado na Neon), corre `migrate resolve --rolled-back` e repete
- * `migrate deploy` uma vez — alinhado ao SQL idempotente nessa pasta de migração.
+ * Recuperação automática (várias tentativas): migrações com SQL idempotente no repo mas
+ * estado falhado/drift na `_prisma_migrations`. Para cada falha reconhecida, corre
+ * `migrate resolve --rolled-back <nome>` e volta a tentar `migrate deploy`.
  */
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
@@ -16,7 +16,25 @@ import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-const FAILED_TECH_CATALOG_MIGRATION = "20260509203000_technology_catalog_skill_fk";
+/** Migrações cujo SQL no repo foi tornado seguro para reaplicar após `--rolled-back`. */
+const RECOVERY_RULES = [
+  {
+    migration: "20260509203000_technology_catalog_skill_fk",
+    matches: (out) =>
+      out.includes("20260509203000_technology_catalog_skill_fk") &&
+      (out.includes("P3009") ||
+        out.includes("P3018") ||
+        out.includes("42P07")),
+  },
+  {
+    migration: "20260509160000_certificate_kind",
+    matches: (out) =>
+      out.includes("20260509160000_certificate_kind") &&
+      (out.includes("P3009") || out.includes("P3018") || out.includes("42710")),
+  },
+];
+
+const MAX_RECOVERY_ATTEMPTS = 6;
 
 if (process.env.SKIP_BUILD_MIGRATIONS === "1") {
   console.log("[run-build-migrations] SKIP_BUILD_MIGRATIONS=1 — a saltar prisma migrate deploy.");
@@ -52,37 +70,51 @@ function pnpmExec(args, mode) {
   return res;
 }
 
-const first = pnpmExec(["prisma", "migrate", "deploy"], "piped");
-if (first.status === 0) {
-  process.exit(0);
+/** @param {string} combined */
+function migrationToRecover(combined) {
+  for (const rule of RECOVERY_RULES) {
+    if (rule.matches(combined)) return rule.migration;
+  }
+  return null;
 }
 
-const combined = `${first.stderr ?? ""}\n${first.stdout ?? ""}`;
-const isTechCatalogP3009 =
-  combined.includes("P3009") && combined.includes(FAILED_TECH_CATALOG_MIGRATION);
+function manualHint() {
+  console.error(`
+[run-build-migrations] prisma migrate deploy falhou sem recuperação automática reconhecida.
 
-if (isTechCatalogP3009) {
+Corre manualmente com DATABASE_URL de produção:
+  pnpm prisma migrate resolve --rolled-back <nome_da_migração>
+  pnpm prisma migrate deploy
+Ver README → «P3009».
+`);
+}
+
+for (let attempt = 0; attempt < MAX_RECOVERY_ATTEMPTS; attempt++) {
+  const deploy = pnpmExec(["prisma", "migrate", "deploy"], "piped");
+  if (deploy.status === 0) {
+    process.exit(0);
+  }
+
+  const combined = `${deploy.stderr ?? ""}\n${deploy.stdout ?? ""}`;
+  const migration = migrationToRecover(combined);
+
+  if (!migration) {
+    manualHint();
+    process.exit(deploy.status ?? 1);
+  }
+
   console.log(
-    `[run-build-migrations] P3009 (${FAILED_TECH_CATALOG_MIGRATION}) — migrate resolve --rolled-back e novo deploy.`,
+    `[run-build-migrations] Falha reconhecida (${migration}) — migrate resolve --rolled-back e nova tentativa.`,
   );
   const resolved = pnpmExec(
-    ["prisma", "migrate", "resolve", "--rolled-back", FAILED_TECH_CATALOG_MIGRATION],
+    ["prisma", "migrate", "resolve", "--rolled-back", migration],
     "inherit",
   );
   if (resolved.status !== 0) {
     console.error("[run-build-migrations] migrate resolve --rolled-back falhou.");
     process.exit(resolved.status ?? 1);
   }
-  const second = pnpmExec(["prisma", "migrate", "deploy"], "inherit");
-  process.exit(second.status ?? 1);
 }
 
-console.error(`
-[run-build-migrations] prisma migrate deploy falhou.
-
-Se o erro for P3009 (outra migração falhada), corre manualmente com DATABASE_URL de produção:
-  pnpm prisma migrate resolve --rolled-back <nome_da_migração>
-  pnpm prisma migrate deploy
-Ver README → «P3009».
-`);
-process.exit(first.status ?? 1);
+console.error("[run-build-migrations] Esgotadas tentativas de recuperação automática.");
+process.exit(1);
