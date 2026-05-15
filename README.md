@@ -186,6 +186,8 @@ Comportamento importante:
 - em build local, `prisma migrate deploy` é ignorado por defeito (usa `RUN_BUILD_MIGRATIONS=1` para forçar);
 - na Vercel (`VERCEL=1`) ou em CI (`CI=true`), as migrations aplicam-se antes do `next build`;
 - `SKIP_BUILD_MIGRATIONS=1` na Vercel desativa migrate no build (só em cenários excecionais).
+- Se o build falhar com **P1001** (Neon inacessível no momento do deploy), o script **repete** a ligação (por defeito 6 tentativas, 5 s entre cada). Ajusta `PRISMA_DB_CONNECT_RETRIES` e `PRISMA_DB_RETRY_DELAY_SEC` na Vercel se precisares.
+- Na `DATABASE_URL` podes acrescentar `connect_timeout=30` (útil com pooler Neon).
 
 ### Migrações no deploy (Vercel / CI)
 
