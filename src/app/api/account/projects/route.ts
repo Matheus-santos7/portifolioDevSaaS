@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
-import { createAccountProject } from "@/features/projects/mutations";
-import { listAccountProjectsForApi } from "@/features/projects/queries";
-import { getApiProfile } from "@/lib/auth/current-profile";
-import type { ProjectWriteBody } from "@/lib/validation/project-schema";
+import { createAccountProject } from "@/app/features/admin/projects/mutations";
+import { listAccountProjectsForApi } from "@/app/features/admin/projects/queries";
+import { getApiProfile } from "@/app/lib/auth/current-profile";
+import type { ProjectWriteBody } from "@/app/lib/validation/project-schema";
 
 export async function GET() {
   const profile = await getApiProfile();

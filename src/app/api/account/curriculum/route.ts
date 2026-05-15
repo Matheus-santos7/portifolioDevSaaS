@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { deleteAccountCurriculum, uploadAccountCurriculum } from "@/features/curriculum/mutations";
-import { getApiProfile } from "@/lib/auth/current-profile";
+import { deleteAccountCurriculum, uploadAccountCurriculum } from "@/app/features/admin/curriculum/mutations";
+import { getApiProfile } from "@/app/lib/auth/current-profile";
 
 export async function POST(request: Request) {
   const profile = await getApiProfile();

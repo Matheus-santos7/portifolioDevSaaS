@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 import {
   type CertificateWriteBody,
   createAccountCertificate,
-} from "@/features/certificates/mutations";
-import { listAccountCertificatesForApi } from "@/features/certificates/queries";
-import { getApiProfile } from "@/lib/auth/current-profile";
+} from "@/app/features/admin/certificates/mutations";
+import { listAccountCertificatesForApi } from "@/app/features/admin/certificates/queries";
+import { getApiProfile } from "@/app/lib/auth/current-profile";
 
 export async function GET() {
   const profile = await getApiProfile();

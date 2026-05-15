@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { destroySession } from "@/lib/auth/session";
+import { destroySession } from "@/app/lib/auth/session";
 
 /**
  * Limpa o cookie de sessão (só permitido em Route Handler, não em Layout/RSC).

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
-import { patchAccountProfile } from "@/features/profile/mutations";
-import { getApiProfile } from "@/lib/auth/current-profile";
-import type { ProfileWriteBody } from "@/lib/validation/profile-schema";
+import { patchAccountProfile } from "@/app/features/admin/profile/mutations";
+import { getApiProfile } from "@/app/lib/auth/current-profile";
+import type { ProfileWriteBody } from "@/app/lib/validation/profile-schema";
 
 export async function PATCH(request: Request) {
   const profile = await getApiProfile();

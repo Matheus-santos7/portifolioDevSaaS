@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { getPublicProjectCoverBinary } from "@/features/projects/public-cover-binary";
-import { getSession } from "@/lib/auth/session";
+import { getPublicProjectCoverBinary } from "@/app/features/public/projects/public-cover-binary";
+import { getSession } from "@/app/lib/auth/session";
 
 type RouteContext = { params: Promise<{ projectId: string }> };
 

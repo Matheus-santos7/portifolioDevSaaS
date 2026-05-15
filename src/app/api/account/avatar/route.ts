@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { uploadAccountAvatar } from "@/features/profile/mutations";
-import { getApiProfile } from "@/lib/auth/current-profile";
+import { uploadAccountAvatar } from "@/app/features/admin/profile/mutations";
+import { getApiProfile } from "@/app/lib/auth/current-profile";
 
 export async function POST(request: Request) {
   const profile = await getApiProfile();

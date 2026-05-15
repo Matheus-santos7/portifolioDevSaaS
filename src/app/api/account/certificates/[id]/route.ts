@@ -4,8 +4,8 @@ import {
   type CertificateWriteBody,
   deleteAccountCertificate,
   updateAccountCertificate,
-} from "@/features/certificates/mutations";
-import { getApiProfile } from "@/lib/auth/current-profile";
+} from "@/app/features/admin/certificates/mutations";
+import { getApiProfile } from "@/app/lib/auth/current-profile";
 
 type Context = { params: Promise<{ id: string }> };
 

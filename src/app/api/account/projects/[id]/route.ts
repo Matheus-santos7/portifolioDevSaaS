@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
-import { deleteAccountProject, updateAccountProject } from "@/features/projects/mutations";
-import { getApiProfile } from "@/lib/auth/current-profile";
-import type { ProjectWriteBody } from "@/lib/validation/project-schema";
+import { deleteAccountProject, updateAccountProject } from "@/app/features/admin/projects/mutations";
+import { getApiProfile } from "@/app/lib/auth/current-profile";
+import type { ProjectWriteBody } from "@/app/lib/validation/project-schema";
 
 type Context = {
   params: Promise<{ id: string }>;

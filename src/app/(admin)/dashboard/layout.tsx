@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
-import { getCurrentProfile } from "@/lib/auth/current-profile";
+import { getCurrentProfile } from "@/app/lib/auth/current-profile";
 
 /**
  * Todas as rotas em `/dashboard/*` exigem sessão válida + perfil na BD (`userId` + `selectedProfileId`).

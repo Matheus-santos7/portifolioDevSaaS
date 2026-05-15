@@ -3,8 +3,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { getCanonicalSiteUrlObject } from "@/core/utils/site/site-url";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -16,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: getCanonicalSiteUrlObject(),
+  metadataBase: new URL("https://portifolio-dev-saas.onrender.com"),
   applicationName: "Portifolio DEV SaaS",
   title: {
     default: "Portifolio DEV SaaS",

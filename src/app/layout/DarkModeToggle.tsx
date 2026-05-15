@@ -3,7 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-import { cn } from "@/core/utils/utils";
+import { cn } from "@/app/core/utils/utils";
 
 type DarkModeToggleProps = {
   className?: string;

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { removeAccountProjectCover, uploadAccountProjectCover } from "@/features/projects/mutations";
-import { getApiProfile } from "@/lib/auth/current-profile";
+import { removeAccountProjectCover, uploadAccountProjectCover } from "@/app/features/admin/projects/mutations";
+import { getApiProfile } from "@/app/lib/auth/current-profile";
 
 type Context = { params: Promise<{ id: string }> };
 

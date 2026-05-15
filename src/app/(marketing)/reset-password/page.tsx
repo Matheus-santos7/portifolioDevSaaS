@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-import { resetPasswordAction } from "@/features/auth/password-actions";
-import HeaderMarketing from "@/features/marketing/components/HeaderMarketing";
-import { RESET_PASSWORD_ERROR_MESSAGES } from "@/lib/auth/error-messages";
-import { MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
+import { resetPasswordAction } from "@/app/core/auth/actions";
+import HeaderMarketing from "@/app/features/public/marketing/components/HeaderMarketing";
+import { RESET_PASSWORD_ERROR_MESSAGES } from "@/app/lib/auth/error-messages";
+import { MIN_PASSWORD_LENGTH } from "@/app/lib/auth/password";
 
 type ResetPasswordPageProps = {
   searchParams: Promise<{ token?: string; err?: string }>;

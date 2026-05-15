@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { getPublicAvatarBinary } from "@/features/profile/public-binary-assets";
-import { getSession } from "@/lib/auth/session";
+import { getPublicAvatarBinary } from "@/app/features/public/profile/server/public-binary-assets";
+import { getSession } from "@/app/lib/auth/session";
 
 type RouteContext = { params: Promise<{ profileId: string }> };
 

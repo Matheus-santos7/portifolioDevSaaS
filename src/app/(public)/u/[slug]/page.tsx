@@ -1,4 +1,4 @@
-import PublicPortfolioScreen from "@/features/portfolio/components/PublicPortfolioScreen";
+import PublicPortfolioScreen from "@/app/features/public/PublicPortfolioScreen";
 
 type PublicPortfolioPageProps = {
   params: Promise<{ slug: string }>;

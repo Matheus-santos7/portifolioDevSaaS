@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-import { loginAction } from "@/features/auth/actions";
-import HeaderMarketing from "@/features/marketing/components/HeaderMarketing";
-import { LOGIN_ERROR_MESSAGES } from "@/lib/auth/error-messages";
+import { loginAction } from "@/app/core/auth/actions";
+import HeaderMarketing from "@/app/features/public/marketing/components/HeaderMarketing";
+import { LOGIN_ERROR_MESSAGES } from "@/app/lib/auth/error-messages";
 
 type LoginPageProps = {
   searchParams: Promise<{

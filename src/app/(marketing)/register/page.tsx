@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-import { registerAction } from "@/features/auth/actions";
-import HeaderMarketing from "@/features/marketing/components/HeaderMarketing";
-import { REGISTER_ERROR_MESSAGES } from "@/lib/auth/error-messages";
-import { MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
+import { registerAction } from "@/app/core/auth/actions";
+import HeaderMarketing from "@/app/features/public/marketing/components/HeaderMarketing";
+import { REGISTER_ERROR_MESSAGES } from "@/app/lib/auth/error-messages";
+import { MIN_PASSWORD_LENGTH } from "@/app/lib/auth/password";
 
 type RegisterPageProps = {
   searchParams: Promise<{ err?: string }>;

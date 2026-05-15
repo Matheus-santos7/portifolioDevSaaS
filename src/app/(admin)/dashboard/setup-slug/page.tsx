@@ -1,4 +1,4 @@
-import SetupSlugScreen from "@/features/dashboard/components/SetupSlugScreen";
+import SetupSlugScreen from "@/app/features/admin/dashboard/SetupSlugScreen";
 
 type PageProps = {
   searchParams: Promise<{ err?: string }>;

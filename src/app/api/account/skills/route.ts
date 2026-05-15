@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
-import { getSkills } from "@/features/skills/get-skills";
-import { putAccountSkillsFromRequest } from "@/features/skills/mutations";
-import { getApiProfile } from "@/lib/auth/current-profile";
+import { putAccountSkillsFromRequest } from "@/app/features/admin/skills/mutations";
+import { getSkills } from "@/app/features/public/skills/get-skills";
+import { getApiProfile } from "@/app/lib/auth/current-profile";
 
 export async function GET() {
   const profile = await getApiProfile();

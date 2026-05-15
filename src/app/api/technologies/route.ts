@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
-import { getTechnologyCatalog } from "@/features/skills/get-skills";
-import { upsertTechnologyFromApiBody } from "@/features/skills/mutations";
-import { getApiProfile } from "@/lib/auth/current-profile";
+import { upsertTechnologyFromApiBody } from "@/app/features/admin/skills/mutations";
+import { getTechnologyCatalog } from "@/app/features/public/skills/get-skills";
+import { getApiProfile } from "@/app/lib/auth/current-profile";
 
 export async function GET() {
   const list = await getTechnologyCatalog();

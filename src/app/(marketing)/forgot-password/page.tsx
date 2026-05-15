@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-import { requestPasswordResetAction } from "@/features/auth/password-actions";
-import HeaderMarketing from "@/features/marketing/components/HeaderMarketing";
-import { FORGOT_PASSWORD_ERROR_MESSAGES } from "@/lib/auth/error-messages";
+import { requestPasswordResetAction } from "@/app/core/auth/actions";
+import HeaderMarketing from "@/app/features/public/marketing/components/HeaderMarketing";
+import { FORGOT_PASSWORD_ERROR_MESSAGES } from "@/app/lib/auth/error-messages";
 
 type ForgotPasswordPageProps = {
   searchParams: Promise<{ err?: string; sent?: string; email?: string; needsPassword?: string }>;

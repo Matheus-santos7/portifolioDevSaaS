@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-import { getAllTechnologyPresets } from "../src/lib/technologies/technology-presets";
+import { getAllTechnologyPresets } from "../src/app/lib/technologies/technology-presets";
 
 const prisma = new PrismaClient();
 
