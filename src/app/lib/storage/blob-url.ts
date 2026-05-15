@@ -40,10 +40,26 @@ export function isPrivateVercelBlobUrl(url: string | null | undefined): boolean 
   }
 }
 
+/** Caminho da rota que faz proxy de blobs private com o token no servidor. */
+export const BLOB_VIEW_API_PATH = "/api/blob/view";
+
 /**
- * Usar em `<Image unoptimized={...} />`: o otimizador do Next na Vercel pede a URL sem credenciais
- * e recebe `OPTIMIZED_EXTERNAL_IMAGE_REQUEST_UNAUTHORIZED` em Blobs private.
+ * URLs **private** do Vercel Blob não são legíveis no browser sem credenciais.
+ * Reescreve para o proxy interno; URLs públicas e caminhos locais mantêm-se.
+ */
+export function proxiedBlobSrcForPublicRead(absoluteOrPathUrl: string): string {
+  if (!isPrivateVercelBlobUrl(absoluteOrPathUrl)) return absoluteOrPathUrl;
+  return `${BLOB_VIEW_API_PATH}?u=${encodeURIComponent(absoluteOrPathUrl)}`;
+}
+
+/**
+ * Usar em `<Image unoptimized={...} />`: o otimizador do Next na Vercel não autentica Blobs private;
+ * rotas `/api/blob/view` devolvem bytes já autorizados no servidor.
  */
 export function nextImageUnoptimized(src: string): boolean {
-  return src.startsWith("blob:") || isPrivateVercelBlobUrl(src);
+  return (
+    src.startsWith("blob:") ||
+    isPrivateVercelBlobUrl(src) ||
+    src.startsWith(`${BLOB_VIEW_API_PATH}?`)
+  );
 }

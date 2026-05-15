@@ -1,3 +1,5 @@
+import { proxiedBlobSrcForPublicRead } from "@/app/lib/storage/blob-url";
+
 type ProfileAvatarFields = {
   avatarUrl: string | null;
 };
@@ -9,7 +11,7 @@ export function resolveProfileAvatarSrc(profile: ProfileAvatarFields): string | 
     url &&
     (url.startsWith("/") || url.startsWith("http://") || url.startsWith("https://"))
   ) {
-    return url;
+    return url.startsWith("https://") ? proxiedBlobSrcForPublicRead(url) : url;
   }
 
   return undefined;

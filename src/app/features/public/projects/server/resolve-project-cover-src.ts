@@ -1,3 +1,5 @@
+import { proxiedBlobSrcForPublicRead } from "@/app/lib/storage/blob-url";
+
 type ProjectCoverFields = {
   backgroundCover: string;
 };
@@ -11,7 +13,8 @@ export function resolveProjectCoverSrc(project: ProjectCoverFields): string {
     url &&
     (url.startsWith("/") || url.startsWith("http://") || url.startsWith("https://"))
   ) {
-    return url;
+    const resolved = url.startsWith("https://") ? proxiedBlobSrcForPublicRead(url) : url;
+    return resolved;
   }
 
   return DEFAULT_COVER;
