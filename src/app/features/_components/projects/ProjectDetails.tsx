@@ -11,6 +11,7 @@ import {
   cardSurfaceClassForStableId,
 } from "@/app/features/_components/certificates/ui";
 import ScrollRevealWrapper from "@/app/features/_components/ui/ScrollRevealWrapper";
+import { nextImageUnoptimized } from "@/app/lib/storage/blob-url";
 
 interface ProjectDetailsProps {
   /** Define o tom do cartão (mesma paleta dos certificados). */
@@ -55,6 +56,7 @@ const ProjectDetails = ({
                 alt={`Imagem do projeto ${name}`}
                 fill
                 className="rounded-lg object-center"
+                unoptimized={nextImageUnoptimized(backgroundCover)}
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center">

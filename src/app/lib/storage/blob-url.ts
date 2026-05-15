@@ -25,3 +25,25 @@ export function hasManagedProjectCover(project: { backgroundCover: string }): bo
 export function hasManagedProfileAvatar(profile: { avatarUrl: string | null }): boolean {
   return isVercelBlobUrl(profile.avatarUrl);
 }
+
+/** Store Blob **Private** — hostname `*.private.blob.vercel-storage.com`. */
+export function isPrivateVercelBlobUrl(url: string | null | undefined): boolean {
+  if (!url?.trim()) return false;
+  try {
+    const parsed = new URL(url.trim());
+    return (
+      parsed.protocol === "https:" &&
+      parsed.hostname.endsWith(VERCEL_BLOB_PRIVATE_HOST_SUFFIX)
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Usar em `<Image unoptimized={...} />`: o otimizador do Next na Vercel pede a URL sem credenciais
+ * e recebe `OPTIMIZED_EXTERNAL_IMAGE_REQUEST_UNAUTHORIZED` em Blobs private.
+ */
+export function nextImageUnoptimized(src: string): boolean {
+  return src.startsWith("blob:") || isPrivateVercelBlobUrl(src);
+}

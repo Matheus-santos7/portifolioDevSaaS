@@ -4,6 +4,8 @@ import { Loader2, Upload } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 
+import { nextImageUnoptimized } from "@/app/lib/storage/blob-url";
+
 type AvatarUploadCircleProps = {
   sizePx: number;
   displaySrc: string | undefined;
@@ -93,7 +95,7 @@ export function AvatarUploadCircle({
         width={sizePx}
         height={sizePx}
         className="h-full w-full object-cover"
-        unoptimized={displaySrc!.startsWith("blob:")}
+        unoptimized={nextImageUnoptimized(displaySrc!)}
       />
     ) : (
       <div className="flex h-full flex-col items-center justify-center gap-1 px-2 text-center">

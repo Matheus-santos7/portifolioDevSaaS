@@ -13,6 +13,7 @@ import {
   isSafeImageSrc,
 } from "@/app/features/public/profile/server/about-section-utils";
 import type { AboutSectionViewModel } from "@/app/features/public/profile/server/profileTypes";
+import { nextImageUnoptimized } from "@/app/lib/storage/blob-url";
 
 export default function AdminAboutSectionClient({
   name,
@@ -182,7 +183,7 @@ export default function AdminAboutSectionClient({
                   width={128}
                   height={128}
                   className="h-full w-full object-cover"
-                  unoptimized={currentDisplayAvatar.startsWith("blob:")}
+                  unoptimized={nextImageUnoptimized(currentDisplayAvatar)}
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center px-2 text-center text-sm text-gray-400 dark:text-gray-300">

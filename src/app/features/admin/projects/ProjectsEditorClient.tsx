@@ -8,7 +8,7 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 import AdminProjectsCarousel from "@/app/features/admin/projects/AdminProjectsCarousel";
 import type { ProjectPublic } from "@/app/features/public/projects/server/get-project";
 import { resolveProjectCoverSrc } from "@/app/features/public/projects/server/resolve-project-cover-src";
-import { hasManagedProjectCover } from "@/app/lib/storage/blob-url";
+import { hasManagedProjectCover, nextImageUnoptimized } from "@/app/lib/storage/blob-url";
 
 const emptyForm = {
   name: "",
@@ -427,7 +427,7 @@ export default function ProjectsEditorClient({
                       fill
                       className="object-cover"
                       sizes="(max-width: 32rem) 100vw, 32rem"
-                      unoptimized={coverDisplay.startsWith("blob:")}
+                      unoptimized={nextImageUnoptimized(coverDisplay)}
                     />
                   ) : (
                     <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center text-sm text-gray-500 dark:text-gray-400">
