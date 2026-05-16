@@ -10,9 +10,9 @@ import { CurriculumManager } from "@/app/features/admin/curriculum/CurriculumMan
 import AdminDashboardHeader from "@/app/features/admin/dashboard/AdminDashboardHeader";
 import AdminAboutSectionClient from "@/app/features/admin/profile/AdminAboutSectionClient";
 import ProjectsEditorClient from "@/app/features/admin/projects/ProjectsEditorClient";
+import { getAdminSkillsSectionData } from "@/app/features/admin/skills/server/getAdminSkillsSectionData";
 import SkillsEditorClient from "@/app/features/admin/skills/SkillsEditorClient";
-import { resolveCurriculumHref } from "@/app/features/public/profile/server/resolve-curriculum-href";
-import { getAdminSkillsSectionData } from "@/app/features/public/skills/server/getSkillsSectionData";
+import { resolveCurriculumHref } from "@/app/features/public/profile/server/urls";
 import { AppBackground } from "@/app/layout/AppBackground";
 import { requireCurrentProfile } from "@/app/lib/auth/current-profile";
 

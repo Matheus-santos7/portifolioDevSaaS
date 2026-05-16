@@ -4,14 +4,14 @@ import {
   type CertificateWriteBody,
   createAccountCertificate,
 } from "@/app/features/admin/certificates/mutations";
-import { listAccountCertificatesForApi } from "@/app/features/admin/certificates/queries";
+import { getCertificates } from "@/app/features/server/certificates";
 import { getApiProfile } from "@/app/lib/auth/current-profile";
 
 export async function GET() {
   const profile = await getApiProfile();
   if (!profile) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const rows = await listAccountCertificatesForApi(profile.id);
+  const rows = await getCertificates(profile.id);
   return NextResponse.json(rows);
 }
 

@@ -8,11 +8,9 @@ import { useCallback, useEffect, useState } from "react";
 import { AvatarUploadCircle } from "@/app/features/_components/ui/AvatarUploadCircle";
 import ScrollRevealWrapper from "@/app/features/_components/ui/ScrollRevealWrapper";
 import { uploadProfileAvatarFile } from "@/app/features/admin/profile/upload-profile-avatar";
-import {
-  formationLine,
-  isSafeImageSrc,
-} from "@/app/features/public/profile/server/about-section-utils";
-import type { AboutSectionViewModel } from "@/app/features/public/profile/server/profileTypes";
+import type { AboutSectionViewModel } from "@/app/features/public/profile/server/types";
+import { isSafeImageSrc } from "@/app/features/public/profile/server/urls";
+import { formationLine } from "@/app/lib/profile/about-formatting";
 import { nextImageUnoptimized } from "@/app/lib/storage/blob-url";
 
 export default function AdminAboutSectionClient({

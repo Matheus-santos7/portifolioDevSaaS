@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { createAccountProject } from "@/app/features/admin/projects/mutations";
-import { listAccountProjectsForApi } from "@/app/features/admin/projects/queries";
+import { getProject } from "@/app/features/server/projects";
 import { getApiProfile } from "@/app/lib/auth/current-profile";
 import type { ProjectWriteBody } from "@/app/lib/validation/project-schema";
 
@@ -9,7 +9,7 @@ export async function GET() {
   const profile = await getApiProfile();
   if (!profile) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const projects = await listAccountProjectsForApi(profile.id);
+  const projects = await getProject(profile.id);
   return NextResponse.json(projects);
 }
 

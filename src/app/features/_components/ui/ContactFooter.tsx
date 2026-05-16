@@ -1,8 +1,8 @@
 import { FileDown, Instagram, Linkedin, Mail, Phone } from "lucide-react";
 
 import { db } from "@/app/core/db/prisma";
-import { getProfile } from "@/app/features/public/profile/server/getProfile";
-import { resolveCurriculumHref } from "@/app/features/public/profile/server/resolve-curriculum-href";
+import { getProfile } from "@/app/features/public/profile/server/queries";
+import { resolveCurriculumHref } from "@/app/features/public/profile/server/urls";
 
 type ContactFooterProps = {
   profileId?: string;

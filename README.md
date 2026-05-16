@@ -40,29 +40,16 @@ src/
 │   ├── (public)/           # página pública /u/[slug]
 │   ├── (admin)/            # dashboard autenticado
 │   ├── _components/        # blocos visuais reutilizáveis
-│   └── api/                # route handlers
-├── modules/
-│   ├── admin/              # composição das telas privadas
-│   ├── public/             # composição das telas públicas
-│   ├── profile/shared/     # view models e loaders de perfil
-│   ├── projects/shared/    # loaders e helpers de projetos
-│   └── certificates/shared/# loaders e helpers de certificados
-└── lib/
-    ├── actions/            # server actions
-    ├── auth/               # sessão, login, registro e reset
-    ├── db/                 # Prisma Client
-    ├── domain/             # helpers e queries por domínio
-    ├── hooks/              # hooks reutilizáveis
-    ├── site/               # helpers de URL e ambiente
-    ├── slugs/              # regras de slug
-    ├── technologies/       # catálogo e presets
-    └── validation/         # schemas e normalização de payload
+│   ├── api/                # route handlers
+│   ├── core/               # Prisma, auth actions, utils partilhados
+│   ├── features/           # composição por contexto (admin, public, …)
+│   └── lib/                # domínio partilhado: auth, e-mail, storage, slugs, validação, …
+└── …
 ```
 
 Princípios que guiam o código:
 
-- `src/app` deve ficar fino e delegar a composição real para `src/modules`;
-- regras de domínio e acesso a dados ficam em `src/lib`;
+- `src/app` concentra rotas, API e UI; helpers de domínio ficam em `src/app/lib`;
 - não há componentes híbridos com flags como `editable` e `readOnly`;
 - a área pública principal é só `/u/[slug]`.
 

@@ -8,7 +8,7 @@ import { loginRedirectWithEmail } from "@/app/lib/auth/error-messages";
 import { hashPassword, MIN_PASSWORD_LENGTH, verifyPassword } from "@/app/lib/auth/password";
 import { issuePasswordResetToken, resetPasswordWithToken } from "@/app/lib/auth/password-reset";
 import { createSession, destroySession } from "@/app/lib/auth/session";
-import { sendPasswordResetEmail } from "@/app/lib/email";
+import { sendPasswordResetEmail } from "@/app/lib/Resend/email";
 import { makeProfileSlug } from "@/app/lib/slugs/slug";
 
 export async function registerAction(formData: FormData) {

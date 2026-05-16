@@ -8,3 +8,10 @@ export async function getProfile(slug?: string) {
     },
   });
 }
+
+export async function getEducation(profileId?: string) {
+  return db.education.findFirst({
+    where: profileId ? { profileId } : undefined,
+    orderBy: { startDate: "desc" },
+  });
+}

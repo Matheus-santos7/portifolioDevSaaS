@@ -1,16 +1,7 @@
-import { db } from "@/app/core/db/prisma";
 import type { CertificateCarouselItem } from "@/app/features/_components/certificates/certificate-carousel-types";
 import { formatCertificateStatusLabel } from "@/app/features/_components/certificates/ui";
 import { serializeCertificate } from "@/app/features/public/certificates/server/serialize";
-
-export async function getCertificates(profileId?: string) {
-  return await db.certificate.findMany({
-    where: profileId ? { profileId } : undefined,
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-}
+import { getCertificates } from "@/app/features/server/certificates";
 
 export async function getCertificatesSectionData(profileId?: string) {
   const certificates = await getCertificates(profileId);

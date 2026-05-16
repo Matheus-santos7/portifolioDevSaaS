@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 
-import { getAboutSectionData } from "@/app/features/public/profile/server/getAbout";
-import type { AboutSectionViewModel } from "@/app/features/public/profile/server/profileTypes";
+import { getAboutSectionData } from "@/app/features/public/profile/server/about-section-data";
+import type { AboutSectionViewModel } from "@/app/features/public/profile/server/types";
 
 type AboutSectionProps = {
   profileId: string;

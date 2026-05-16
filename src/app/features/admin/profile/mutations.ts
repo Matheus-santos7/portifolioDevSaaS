@@ -1,7 +1,6 @@
-import type { Prisma } from "@prisma/client";
+import type { Prisma, Profile } from "@prisma/client";
 
 import { db } from "@/app/core/db/prisma";
-import { profileWithoutSensitiveBlobs } from "@/app/features/public/profile/server/profile-response";
 import { isVercelBlobUrl } from "@/app/lib/storage/blob-url";
 import {
   deleteBlobUrlIfStored,
@@ -14,7 +13,7 @@ import {
   type ProfileWriteBody,
 } from "@/app/lib/validation/profile-schema";
 
-type ProfileSerialized = ReturnType<typeof profileWithoutSensitiveBlobs>;
+type ProfileSerialized = Profile;
 
 function nextScalarFromPatch(
   prev: string | null,
@@ -76,7 +75,7 @@ export async function patchAccountProfile(
     data: updateData.value,
   });
 
-  return { ok: true, data: profileWithoutSensitiveBlobs(updated) };
+  return { ok: true, data: updated };
 }
 
 const AVATAR_MAX_BYTES = 512 * 1024;

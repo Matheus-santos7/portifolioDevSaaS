@@ -1,5 +1,5 @@
 import { db } from "@/app/core/db/prisma";
-import type { ProjectPublic } from "@/app/features/public/projects/server/get-project";
+import type { ProjectPublic } from "@/app/features/server/projects";
 import { isVercelBlobUrl } from "@/app/lib/storage/blob-url";
 import {
   deleteBlobUrlIfStored,

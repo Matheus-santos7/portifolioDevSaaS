@@ -4,6 +4,7 @@ import { Loader2, Upload } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 
+import { isSafeImageSrc } from "@/app/features/public/profile/server/urls";
 import { nextImageUnoptimized } from "@/app/lib/storage/blob-url";
 
 type AvatarUploadCircleProps = {
@@ -15,10 +16,6 @@ type AvatarUploadCircleProps = {
   onPickFile?: (file: File) => void;
   emptyHint?: string;
 };
-
-function isSafeImageSrc(src: string) {
-  return src.startsWith("/") || src.startsWith("http://") || src.startsWith("https://");
-}
 
 export function AvatarUploadCircle({
   sizePx,

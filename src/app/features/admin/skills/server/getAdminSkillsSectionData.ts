@@ -1,12 +1,5 @@
+import { getSkills, getTechnologyCatalog } from "@/app/features/server/skills";
 import { listLocalTechIcons } from "@/app/lib/technologies/local-public-tech-icons";
-
-import { getSkills, getTechnologyCatalog } from "./get-skills";
-
-export async function getPublicSkillsSectionData(profileId: string) {
-  return {
-    skills: await getSkills(profileId),
-  };
-}
 
 export async function getAdminSkillsSectionData(profileId: string) {
   const [skills, catalog] = await Promise.all([

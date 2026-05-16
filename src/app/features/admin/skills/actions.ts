@@ -1,7 +1,7 @@
 "use server";
 
 import { syncProfileSkillsFromIconSrcs } from "@/app/features/admin/skills/mutations";
-import type { SkillWithTechnology, TechnologyCatalogRow } from "@/app/features/public/skills/server/get-skills";
+import type { SkillWithTechnology, TechnologyCatalogRow } from "@/app/features/server/skills";
 import { requireCurrentProfile } from "@/app/lib/auth/current-profile";
 
 type SyncSkillsActionResult =

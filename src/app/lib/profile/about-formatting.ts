@@ -4,10 +4,7 @@ function degreeKindLabel(kind: DegreeKind) {
   return kind === "POST_GRADUATION" ? "Pós-graduado" : "Graduado";
 }
 
-export function isSafeImageSrc(src: string) {
-  return src.startsWith("/") || src.startsWith("http://") || src.startsWith("https://");
-}
-
+/** Linha única de formação para a grelha «Sobre». */
 export function formationLine(
   degreeKind: DegreeKind,
   degreeHighlight: string,

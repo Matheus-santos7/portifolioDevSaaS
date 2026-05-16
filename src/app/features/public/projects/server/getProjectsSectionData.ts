@@ -1,5 +1,5 @@
-import { getProject } from "@/app/features/public/projects/server/get-project";
 import { resolveProjectCoverSrc } from "@/app/features/public/projects/server/resolve-project-cover-src";
+import { getProject } from "@/app/features/server/projects";
 
 export async function getProjectsSectionData(profileId?: string) {
   const projects = await getProject(profileId);

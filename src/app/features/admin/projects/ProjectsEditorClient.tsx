@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
 import AdminProjectsCarousel from "@/app/features/admin/projects/AdminProjectsCarousel";
-import type { ProjectPublic } from "@/app/features/public/projects/server/get-project";
 import { resolveProjectCoverSrc } from "@/app/features/public/projects/server/resolve-project-cover-src";
+import type { ProjectPublic } from "@/app/features/server/projects";
 import { hasManagedProjectCover, nextImageUnoptimized } from "@/app/lib/storage/blob-url";
 
 const emptyForm = {

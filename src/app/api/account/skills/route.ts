@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { putAccountSkillsFromRequest } from "@/app/features/admin/skills/mutations";
-import { getSkills } from "@/app/features/public/skills/server/get-skills";
+import { getSkills } from "@/app/features/server/skills";
 import { getApiProfile } from "@/app/lib/auth/current-profile";
 
 export async function GET() {

@@ -1,7 +1,7 @@
 import { db } from "@/app/core/db/prisma";
-import { getEducation } from "@/app/features/public/profile/server/getEducation";
-import type { AboutSectionViewModel } from "@/app/features/public/profile/server/profileTypes";
-import { resolveProfileAvatarSrc } from "@/app/features/public/profile/server/resolve-profile-avatar-src";
+import { getEducation } from "@/app/features/public/profile/server/queries";
+import type { AboutSectionViewModel } from "@/app/features/public/profile/server/types";
+import { resolveProfileAvatarSrc } from "@/app/features/public/profile/server/urls";
 
 export async function getAboutSectionData(profileId: string) {
   const profile = await db.profile.findUnique({
