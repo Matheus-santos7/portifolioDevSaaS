@@ -1,222 +1,362 @@
-# MSPortifólio SaaS
+<div align="center">
 
-SaaS de portfólio para desenvolvedores, com página pública em `/u/[slug]`, dashboard autenticado e arquitetura organizada por contexto.
+<br />
+<h1>Plataforma SaaS para portfólios de desenvolvedores — crie, gerencie e compartilhe seu perfil profissional em uma URL única</h1>
+<br />
+[![Next.js](https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
+<br />
+[🌐 Demo ao vivo](https://pagesaas.vercel.app/u/matheus-santos7) · [🐛 Reportar bug](https://github.com/Matheus-santos7/portifolioDevSaaS/issues) · [💡 Sugerir feature](https://github.com/Matheus-santos7/portifolioDevSaaS/issues)
+</div>
 
-## Visão geral
-O projeto permite que uma pessoa desenvolvedora:
+---
 
-- crie uma conta;
-- escolha um slug público;
-- edite perfil, habilidades, projetos, certificados e currículo;
-- publique tudo em uma URL única para compartilhar em currículo, LinkedIn ou propostas.
+## 📋 Índice
 
-Hoje a superfície pública oficial do produto é enxuta: o visitante consome o conteúdo diretamente em `/u/[slug]`. Toda a edição acontece no dashboard autenticado.
+- [Sobre o projeto](#-sobre-o-projeto)
+- [Funcionalidades](#-funcionalidades)
+- [Stack tecnológica](#-stack-tecnológica)
+- [Arquitetura](#-arquitetura)
+- [Rotas](#-rotas)
+- [Começando](#-começando)
+- [Variáveis de ambiente](#-variáveis-de-ambiente)
+- [Scripts disponíveis](#-scripts-disponíveis)
+- [Deploy](#-deploy)
+- [API interna](#-api-interna)
+- [Segurança](#-segurança)
+- [Melhorias futuras](#-melhorias-futuras)
+- [Autor](#-autor)
 
-## O que existe no produto
-- Landing page e fluxos de autenticação.
-- Portfólio público por slug.
-- Dashboard para gerenciar perfil, skills, projetos e certificados.
-- Upload de avatar, currículo PDF e capa de projeto.
-- Recuperação de senha por e-mail.
-- Onboarding para definição do slug público.
+---
 
-## Stack
-- Next.js 15 com App Router
-- React 18
-- TypeScript 5
-- Tailwind CSS
-- Prisma
-- PostgreSQL
-- pnpm
-- Deploy orientado para Vercel
+## 🚀 Sobre o projeto
 
-## Arquitetura
-O projeto segue uma separação explícita por contexto:
+**MS Portfólio SaaS** é uma plataforma completa que permite a desenvolvedores criar e publicar seu portfólio profissional em uma URL personalizada (`/u/seu-slug`). A aplicação combina uma landing page pública com um dashboard autenticado para gestão completa do perfil.
 
-```text
+O visitante acessa o portfólio diretamente pela URL pública — sem cadastro, sem fricção. Toda a edição acontece no dashboard privado, protegido por autenticação própria com sessão via cookie `httpOnly`.
+
+---
+
+## ✨ Funcionalidades
+
+| Área | Funcionalidade |
+|------|---------------|
+| 🔐 **Autenticação** | Cadastro, login, logout, recuperação de senha por e-mail |
+| 👤 **Perfil** | Edição de nome, bio, avatar e informações pessoais |
+| 🔗 **Slug público** | Onboarding para definir URL única (`/u/[slug]`) |
+| 💼 **Projetos** | CRUD de projetos com upload de capa |
+| 🛠️ **Skills** | Catálogo global de tecnologias com seleção de habilidades |
+| 📜 **Certificados** | Gerenciamento de certificados e cursos |
+| 📄 **Currículo** | Upload de currículo em PDF |
+| 🌐 **Portfólio público** | Página pública em `/u/[slug]` para compartilhar |
+
+---
+
+## 🛠️ Stack tecnológica
+
+### Frontend
+- **[Next.js 15](https://nextjs.org/)** com App Router e Turbopack
+- **[React 18](https://react.dev/)** com Server Components
+- **[TypeScript 5](https://www.typescriptlang.org/)** — tipagem completa
+- **[Tailwind CSS 3](https://tailwindcss.com/)** — estilização utility-first
+- **[Lucide React](https://lucide.dev/)** + **[React Icons](https://react-icons.github.io/)** — ícones
+- **[shadcn/ui](https://ui.shadcn.com/)** — componentes acessíveis
+
+### Backend & Banco de dados
+- **[Prisma 6](https://www.prisma.io/)** — ORM type-safe
+- **[PostgreSQL](https://www.postgresql.org/)** — banco de dados relacional
+- **[Vercel Blob](https://vercel.com/storage/blob)** — armazenamento de arquivos
+
+### Autenticação & E-mail
+- Autenticação própria com sessão por cookie `httpOnly` assinado
+- **[Resend](https://resend.com/)** — envio de e-mails transacionais
+
+### Tooling
+- **pnpm** — gerenciador de pacotes
+- **ESLint** + **Prettier** — linting e formatação
+- **GitHub Actions** — CI/CD
+
+---
+
+## 🏗️ Arquitetura
+
+O projeto segue uma separação explícita de responsabilidades por contexto. Não há componentes híbridos com flags como `editable`/`readOnly` — cada área tem seus próprios blocos de UI.
+
+```
 src/
-├── app/
-│   ├── (marketing)/        # landing + auth
-│   ├── (public)/           # página pública /u/[slug]
-│   ├── (admin)/            # dashboard autenticado
-│   ├── _components/        # blocos visuais reutilizáveis
-│   ├── api/                # route handlers
-│   ├── core/               # Prisma, auth actions, utils partilhados
-│   ├── features/           # composição por contexto (admin, public, …)
-│   └── lib/                # domínio partilhado: auth, e-mail, storage, slugs, validação, …
-└── …
+└── app/
+    ├── (marketing)/          # Landing page + fluxos de autenticação
+    │   ├── login/
+    │   ├── register/
+    │   ├── forgot-password/
+    │   └── reset-password/
+    │
+    ├── (public)/             # Portfólio público
+    │   └── u/[slug]/         # Página pública do desenvolvedor
+    │
+    ├── (admin)/              # Dashboard autenticado
+    │   └── dashboard/
+    │       ├── manage/       # Perfil, skills, projetos, certificados
+    │       └── setup-slug/   # Onboarding
+    │
+    ├── _components/          # Blocos visuais reutilizáveis
+    ├── api/                  # Route Handlers (REST API interna)
+    ├── core/                 # Prisma client, auth actions, utils compartilhados
+    ├── features/             # Composição de features por contexto
+    └── lib/                  # Domínio compartilhado
+        ├── auth/             # Sessão, cookies, helpers
+        ├── email/            # Templates e envio via Resend
+        ├── storage/          # Upload de arquivos
+        ├── slugs/            # Validação e geração de slugs
+        └── validation/       # Schemas de validação de payloads
 ```
 
-Princípios que guiam o código:
+**Princípios arquiteturais:**
+- `src/app` concentra rotas, API e UI
+- Helpers de domínio ficam em `src/app/lib`
+- A área pública principal é apenas `/u/[slug]`
+- Não há acoplamento entre contexto público e privado
 
-- `src/app` concentra rotas, API e UI; helpers de domínio ficam em `src/app/lib`;
-- não há componentes híbridos com flags como `editable` e `readOnly`;
-- a área pública principal é só `/u/[slug]`.
+---
 
-## Rotas principais
-- `/` - landing page
-- `/login` - login
-- `/register` - cadastro
-- `/forgot-password` - solicitar reset de senha
-- `/reset-password` - redefinir senha
-- `/u/[slug]` - página pública do portfólio
-- `/dashboard` - dashboard autenticado
-- `/dashboard/setup-slug` - onboarding do slug
-- `/dashboard/manage` - rota legada que redireciona para `/dashboard`
+## 🗺️ Rotas
 
-## Como rodar localmente
+### Públicas
+
+| Rota | Descrição |
+|------|-----------|
+| `/` | Landing page |
+| `/login` | Página de login |
+| `/register` | Cadastro de nova conta |
+| `/forgot-password` | Solicitar reset de senha |
+| `/reset-password` | Redefinir senha via token |
+| `/u/[slug]` | **Portfólio público do desenvolvedor** |
+
+### Autenticadas (Dashboard)
+
+| Rota | Descrição |
+|------|-----------|
+| `/dashboard` | Visão geral do dashboard |
+| `/dashboard/setup-slug` | Onboarding — definir slug público |
+| `/dashboard/manage` | Redireciona para `/dashboard` (legado) |
+
+---
+
+## 🏁 Começando
+
 ### Pré-requisitos
-- Node.js 20+
-- pnpm 9+
-- PostgreSQL acessível localmente ou remotamente
 
-### 1. Instale as dependências
+- **Node.js** 20+
+- **pnpm** 9+
+- **PostgreSQL** acessível (local ou remoto — Neon, Supabase, Railway)
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/Matheus-santos7/portifolioDevSaaS.git
+cd portifolioDevSaaS
+```
+
+### 2. Instale as dependências
+
 ```bash
 pnpm install
 ```
 
-### 2. Configure o ambiente
+### 3. Configure as variáveis de ambiente
+
 ```bash
 cp .env.example .env
 ```
 
-Preencha pelo menos:
+Preencha ao menos as variáveis obrigatórias (veja a seção completa abaixo).
 
-```env
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require"
-AUTH_SESSION_SECRET="uma-string-longa-e-aleatoria"
-APP_URL="http://localhost:3000"
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-```
+### 4. Aplique as migrations
 
-Se quiser testar recuperação de senha por e-mail, configure também:
-
-```env
-RESEND_API_KEY=
-EMAIL_FROM=
-```
-
-### 3. Aplique as migrations
 ```bash
 pnpm exec prisma migrate dev
 ```
 
-### 4. Popule o catálogo inicial
+### 5. Popule o catálogo inicial
+
 ```bash
 pnpm db:seed
 ```
 
-O seed popula o catálogo global de tecnologias usado pelas skills.
+> O seed popula o catálogo global de tecnologias usado pelas skills.
 
-### 5. Suba o projeto
+### 6. Inicie o servidor de desenvolvimento
+
 ```bash
 pnpm dev
 ```
 
-Abra [http://localhost:3000](http://localhost:3000).
+Acesse [http://localhost:3000](http://localhost:3000) 🎉
 
-## Scripts
-- `pnpm dev` - desenvolvimento com Turbopack
-- `pnpm build` - gera o Prisma Client, executa migrations quando aplicável e faz o build do Next.js
-- `pnpm start` - sobe a aplicação em modo produção
-- `pnpm lint` - executa o lint
-- `pnpm typecheck` - checa os tipos com TypeScript
-- `pnpm db:migrate:deploy` - aplica migrations pendentes
-- `pnpm db:seed` - executa o seed do banco
+---
 
-## Prisma e banco de dados
-- O schema está em `prisma/schema.prisma`.
-- A configuração do Prisma CLI está em `prisma.config.ts`.
-- As migrations ficam em `prisma/migrations`.
-- O seed roda `prisma/seed.ts`.
+## 🔑 Variáveis de ambiente
 
-O projeto depende de PostgreSQL para funcionar. Hoje avatar, currículo PDF e capa de projeto também podem ser armazenados diretamente no banco.
+Copie `.env.example` para `.env` e preencha:
 
-## Variáveis de ambiente
-Obrigatórias em produção:
+### Obrigatórias
 
-- `DATABASE_URL`
-- `AUTH_SESSION_SECRET`
-
-Relevantes para links, metadata e e-mails:
-
-- `APP_URL`
-- `NEXT_PUBLIC_APP_URL`
-- `RESEND_API_KEY`
-- `EMAIL_FROM`
-- `PASSWORD_RESET_COOLDOWN_SECONDS`
-
-Em produção, a aplicação falha cedo no bootstrap se `DATABASE_URL` ou `AUTH_SESSION_SECRET` estiverem ausentes.
-
-## Autenticação e integrações
-- Autenticação própria com sessão por cookie `httpOnly`
-- PostgreSQL como banco principal
-- Prisma como ORM
-- Resend para envio de e-mails de reset de senha
-- Vercel como plataforma de deploy recomendada
-
-## Build e deploy
-O comando de build do projeto é:
-
-```bash
-pnpm build
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require"
+AUTH_SESSION_SECRET="uma-string-longa-e-aleatoria-minimo-32-chars"
 ```
 
-Internamente ele executa:
+### URL da aplicação
 
-```bash
-prisma generate && node scripts/run-build-migrations.mjs && next build
+```env
+APP_URL="http://localhost:3000"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
-Comportamento importante:
+### E-mail (para recuperação de senha)
 
-- em build local, `prisma migrate deploy` é ignorado por defeito (usa `RUN_BUILD_MIGRATIONS=1` para forçar);
-- na Vercel (`VERCEL=1`) ou em CI (`CI=true`), as migrations aplicam-se antes do `next build`;
-- `SKIP_BUILD_MIGRATIONS=1` na Vercel desativa migrate no build (só em cenários excecionais).
-- Se o build falhar com **P1001** (Neon inacessível no momento do deploy), o script **repete** a ligação (por defeito 6 tentativas, 5 s entre cada). Ajusta `PRISMA_DB_CONNECT_RETRIES` e `PRISMA_DB_RETRY_DELAY_SEC` na Vercel se precisares.
-- Na `DATABASE_URL` podes acrescentar `connect_timeout=30` (útil com pooler Neon).
+```env
+RESEND_API_KEY="re_xxxxxxxxxxxxxxxx"
+EMAIL_FROM="noreply@seudominio.com"
+PASSWORD_RESET_COOLDOWN_SECONDS=60
+```
 
-### Migrações no deploy (Vercel / CI)
+> ⚠️ Em produção, a aplicação falhará no bootstrap se `DATABASE_URL` ou `AUTH_SESSION_SECRET` estiverem ausentes.
 
-O script `scripts/run-build-migrations.mjs` corre `prisma migrate deploy` antes do `next build`.
+---
 
-**Recuperação automática:** se o deploy falhar, o Prisma indica a migração falhada (`Migration name: …` em **P3018**, ou ``The `…` migration`` em **P3009**). O script extrai esse nome e, só se estiver na **allowlist** de migrações com SQL **idempotente** no repositório, corre `migrate resolve --rolled-back` e volta a tentar `deploy` (até 12 ciclos). Isto evita rollback na migração errada quando o log menciona várias migrações.
+## 📦 Scripts disponíveis
 
-Migrações na allowlist: `20260509160000_certificate_kind`, `20260509203000_technology_catalog_skill_fk`, `20260509220000_technology_svg_url`.
+| Script | Descrição |
+|--------|-----------|
+| `pnpm dev` | Servidor de desenvolvimento com Turbopack |
+| `pnpm build` | Gera Prisma Client, executa migrations e faz build |
+| `pnpm start` | Sobe a aplicação em modo produção |
+| `pnpm lint` | Executa o ESLint |
+| `pnpm typecheck` | Verificação de tipos com TypeScript |
+| `pnpm db:migrate:deploy` | Aplica migrations pendentes |
+| `pnpm db:seed` | Executa o seed do banco de dados |
 
-**Reset total (base de teste, poucos dados):** na Vercel define **`PRISMA_RESET_DB_ON_DEPLOY=1`** (só **uma vez**), faz deploy — o script corre `prisma migrate reset --force` (apaga **todos** os dados e reaplica todas as migrations). **Remove a variável** a seguir para não apagar dados em cada build.
+---
 
-**Manual** (produção ou migração fora da allowlist), com `DATABASE_URL` certo:
+## 🚢 Deploy
+
+### Vercel (recomendado)
+
+O projeto está otimizado para Vercel. O script de build executa automaticamente:
+
+```
+prisma generate → prisma migrate deploy → next build
+```
+
+**Comportamentos importantes:**
+
+- Em **desenvolvimento local**: `prisma migrate deploy` é ignorado por padrão. Use `RUN_BUILD_MIGRATIONS=1` para forçar.
+- Na **Vercel** (`VERCEL=1`) ou **CI** (`CI=true`): as migrations são aplicadas antes do `next build`.
+- `SKIP_BUILD_MIGRATIONS=1` desativa migrations no build (apenas em cenários excepcionais).
+
+**Resiliência a falhas de conexão (Neon):**
+
+Se o build falhar com `P1001` (banco inacessível), o script repete automaticamente a conexão — por padrão 6 tentativas com 5s de intervalo. Configure via:
+
+```env
+PRISMA_DB_CONNECT_RETRIES=6
+PRISMA_DB_RETRY_DELAY_SEC=5
+```
+
+**Reset total do banco** (apenas para ambientes de teste com poucos dados):
+
+1. Defina `PRISMA_RESET_DB_ON_DEPLOY=1` na Vercel
+2. Execute o deploy — o script roda `prisma migrate reset --force`
+3. **Remova a variável imediatamente** para não apagar dados nos builds seguintes
+
+**Resolução manual de migration com falha:**
 
 ```bash
-pnpm prisma migrate resolve --rolled-back <nome_da_migração>
+pnpm prisma migrate resolve --rolled-back <nome_da_migration>
 pnpm prisma migrate deploy
 ```
 
-Se o schema já estiver aplicado e só o histórico `_prisma_migrations` estiver errado, usa `--applied` (vê [documentação Prisma](https://www.prisma.io/docs/guides/migrate/production-troubleshooting)).
+### Outros provedores
 
-Para deploy, configure as variáveis de ambiente no provedor e use um PostgreSQL compatível, como Neon, Supabase, Railway ou outra instância PostgreSQL gerenciada.
+Configure as variáveis de ambiente e use um PostgreSQL compatível: **Neon**, **Supabase**, **Railway** ou qualquer instância gerenciada.
 
-## Endpoints internos relevantes
-- `/api/account/profile`
-- `/api/account/avatar`
-- `/api/account/curriculum`
-- `/api/account/projects`
-- `/api/account/projects/[id]`
-- `/api/account/projects/[id]/cover`
-- `/api/account/certificates`
-- `/api/account/certificates/[id]`
-- `/api/account/skills`
-- `/api/technologies`
+> 💡 Dica: adicione `connect_timeout=30` à `DATABASE_URL` ao usar o pooler do Neon.
 
-## Qualidade e segurança
-- dashboard protegido por helpers centrais de sessão;
-- cookie de sessão assinado;
-- validação de payloads nos fluxos privados;
-- `lint` e `typecheck` no fluxo de verificação;
-- falha antecipada em produção quando faltam variáveis críticas.
+---
 
-## Autor
-Desenvolvido por [Matheus Santos](https://linkedin.com/in/matheus-santos7).
+## 🔌 API interna
 
-- GitHub: [@matheus-santos7](https://github.com/matheus-santos7)
+Todos os endpoints são protegidos por sessão. Base: `/api/`
+
+| Endpoint | Descrição |
+|----------|-----------|
+| `GET/PATCH /api/account/profile` | Perfil do usuário |
+| `POST /api/account/avatar` | Upload de avatar |
+| `POST /api/account/curriculum` | Upload de currículo PDF |
+| `GET/POST /api/account/projects` | Listar e criar projetos |
+| `PATCH/DELETE /api/account/projects/[id]` | Editar e remover projeto |
+| `POST /api/account/projects/[id]/cover` | Upload de capa do projeto |
+| `GET/POST /api/account/certificates` | Listar e criar certificados |
+| `PATCH/DELETE /api/account/certificates/[id]` | Editar e remover certificado |
+| `GET/POST /api/account/skills` | Listar e gerenciar skills |
+| `GET /api/technologies` | Catálogo global de tecnologias |
+
+---
+
+## 🔒 Segurança
+
+- Dashboard protegido por helpers centrais de sessão em todas as rotas
+- Cookie de sessão assinado com `AUTH_SESSION_SECRET` (`httpOnly`, `SameSite`)
+- Validação de payloads em todos os fluxos privados
+- Falha antecipada em produção quando variáveis críticas estão ausentes
+- `lint` e `typecheck` integrados ao fluxo de verificação de código
+
+---
+
+## 🌱 Melhorias futuras
+
+Esta seção lista oportunidades de evolução identificadas na análise do projeto, organizadas por impacto e esforço.
+
+### 🔴 Alta prioridade
+
+- **Testes automatizados** — o projeto não possui cobertura de testes. Adicionar testes unitários com Vitest para a camada `lib/` e testes de integração para os route handlers seria o maior ganho de confiabilidade.
+- **Rate limiting nas rotas de autenticação** — `/login`, `/register` e `/forgot-password` estão expostos a ataques de força bruta. Implementar rate limiting com `@upstash/ratelimit` ou middleware do Vercel é crítico para produção.
+- **Validação de payloads com Zod** — padronizar a validação de entrada em todos os route handlers com um schema Zod compartilhado, eliminando validação manual dispersa.
+
+### 🟡 Média prioridade
+
+- **Armazenamento externo de arquivos** — avatar, currículo e capas de projeto atualmente podem ser armazenados diretamente no banco. Migrar 100% para Vercel Blob ou outro serviço de object storage melhora performance e reduz custo de banco.
+- **SEO e Open Graph dinâmico** — gerar metadata dinâmica por slug (`/u/[slug]`) com `generateMetadata` do Next.js para melhorar o preview ao compartilhar o portfólio em redes sociais.
+- **Paginação no dashboard** — projetos, certificados e skills não têm paginação. Com o crescimento dos dados, isso pode gerar queries lentas.
+- **Internacionalização (i18n)** — o projeto está em português, mas uma estrutura i18n (next-intl) abriria o produto para o mercado global.
+
+### 🟢 Baixa prioridade / Qualidade de vida
+
+- **Storybook** — documentar os componentes de `_components/` em Storybook facilita onboarding de novos contribuidores e evita retrabalho visual.
+- **GitHub Actions para CI** — adicionar um workflow que rode `lint` e `typecheck` em todo PR garante que o código no `main` esteja sempre válido.
+- **Dark mode** — o Tailwind já suporta `dark:`, e shadcn/ui tem suporte nativo. Implementar tema escuro seria de alto impacto visual com baixo esforço.
+- **Analytics de visitas** — integrar Vercel Analytics ou Plausible para que cada desenvolvedor veja quantas visitas seu portfólio recebeu.
+- **Exportação do portfólio em PDF** — gerar um PDF do portfólio público (`/u/[slug]`) com `@react-pdf/renderer` para facilitar o uso em processos seletivos.
+- **Correção de typo** — o nome do repositório e do `package.json` contêm "portifolio" (sem 'r'). Considerar renomear para `portfolioDevSaaS` para melhorar a indexação e profissionalismo.
+
+---
+
+## 👨‍💻 Autor
+
+Desenvolvido com 💙 por **Matheus Santos**
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/matheus-santos7)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/matheus-santos7)
+
+---
+
+<div align="center">
+
+Se este projeto te ajudou, considere deixar uma ⭐️ no repositório!
+
+</div>
